@@ -1,0 +1,33 @@
+@inherits LayoutComponentBase
+
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="favicon.png" alt="Бренд" width="30" height="30" class="d-inline-block align-text-top">
+                Корпорация
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="online">
+                            Онлайн
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/home" class="nav-link">Информация</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a class="btn btn-outline-info me-1" href="/">Профиль</a>
+                    <a class="btn btn-outline-danger me-1" href="/">Выход</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

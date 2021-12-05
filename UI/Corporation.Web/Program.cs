@@ -31,5 +31,6 @@ app.MapControllerRoute("controllers", "controllers/{controller=Home}/{action=Ind
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 app.MapBlazorHub();
+app.MapFallbackToPage("online/{param?}", "/Shared/_Host");
 
 app.Run();
