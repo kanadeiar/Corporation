@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ui", "ui", "{5ACDF8B0-2AD5-466C-B1EE-0C25D0E5696D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corporation.Web", "ui\Corporation.Web\Corporation.Web.csproj", "{948376C0-D712-4CC3-B0B2-E5693F7CCAA6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{948376C0-D712-4CC3-B0B2-E5693F7CCAA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948376C0-D712-4CC3-B0B2-E5693F7CCAA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948376C0-D712-4CC3-B0B2-E5693F7CCAA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948376C0-D712-4CC3-B0B2-E5693F7CCAA6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{948376C0-D712-4CC3-B0B2-E5693F7CCAA6} = {5ACDF8B0-2AD5-466C-B1EE-0C25D0E5696D}
+	EndGlobalSection
+EndGlobal
