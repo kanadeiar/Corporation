@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    overflow-y: scroll;
+    margin-bottom: 80px;
+    background: #bffff0;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 80px; 
+}

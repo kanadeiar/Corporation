@@ -1,0 +1,26 @@
+@{
+    ViewBag.Title = "О приложении";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <partial name="Partial/_LeftSidebarPartial" />
+        </div>
+        <div class="col-sm-9">
+            <h1>@ViewBag.Title</h1>
+
+            <h5 class="p-4 bg-success text-white text-center">Корпорация</h5>
+
+            <p>Прототип корпоративного приложения.</p>
+
+            <a class="btn btn-outline-success" target="_blank" href="https://github.com/kanadeiar/Corporation">
+                <i class="fab fa-git"></i>
+                Мой github
+            </a>
+
+            <!--<component type="typeof(CounterPartial)" render-mode="ServerPrerendered" />-->
+        </div>
+    </div>
+
+</div>
