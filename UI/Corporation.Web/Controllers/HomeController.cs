@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace Corporation.Web.Controllers;
 
 public class HomeController : Controller

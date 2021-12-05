@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureServices(services =>
 {
     services.AddControllersWithViews().AddRazorRuntimeCompilation();
+    services.AddRazorPages().AddRazorRuntimeCompilation();
 });
 builder.Services.AddServerSideBlazor();
 
@@ -20,13 +21,15 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseStatusCodePagesWithRedirects("~/home/error/{0}");
-
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseStatusCodePagesWithRedirects("~/home/error/{0}");
+
+app.MapControllerRoute("controllers", "controllers/{controller=Home}/{action=Index}/{id?}");
 app.MapDefaultControllerRoute();
+app.MapRazorPages();
 app.MapBlazorHub();
 
 app.Run();

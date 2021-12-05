@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
+<environment include="Development">
+    <link href="~/css/main.css" rel="stylesheet" asp-append-version="true" />
+</environment>
+
+<environment exclude="Development">
+    <link href="~/css/site.min.css" rel="stylesheet" asp-append-version="true" />
+</environment>
