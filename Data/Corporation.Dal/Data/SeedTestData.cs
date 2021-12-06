@@ -1,6 +1,4 @@
-﻿
-
-namespace Corporation.Dal.Data;
+﻿namespace Corporation.Dal.Data;
 
 public static class SeedTestData
 {
