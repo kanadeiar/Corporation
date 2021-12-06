@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Corporation.Interfaces\Corporation.Interfaces.csproj" />
     <ProjectReference Include="..\..\Data\Corporation.Dal\Corporation.Dal.csproj" />
+    <ProjectReference Include="..\..\Services\Corporation.Services\Corporation.Services.csproj" />
   </ItemGroup>
 
 </Project>

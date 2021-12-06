@@ -1,12 +1,12 @@
 
-
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureServices(services =>
 {
     services.AddDbContext<Plant1Context>(options => options.UseSqlite( builder.Configuration.GetConnectionString("Plant1Connection") ));
+
+    services.AddScoped<IProductTypeData, DatabaseProductTypeData>();
+
     services.AddControllersWithViews().AddRazorRuntimeCompilation();
     services.AddRazorPages().AddRazorRuntimeCompilation();
 });
