@@ -1,0 +1,15 @@
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(_Layout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Не найдено</PageTitle>
+        <LayoutView Layout="@typeof(_Layout)">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Не найдена страница с этим адресом.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </LayoutView>
+    </NotFound>
+</Router>

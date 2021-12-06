@@ -1,0 +1,22 @@
+@inherits LayoutComponentBase
+
+<PageTitle>Корпорация Онлайн</PageTitle>
+
+<_HeaderPartial />
+
+<main role="main">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="flex-column">
+                    <_LeftSidebarPartial />
+                </nav>
+            </div>
+            <div class="col-md-9">
+                @Body
+            </div>
+        </div>
+    </div>
+</main>
+
+<_FooterPartial />

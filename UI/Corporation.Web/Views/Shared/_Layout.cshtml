@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="ru-ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Корпорация</title>
+
+    <partial name="Partial/_StylesPartial" />
+
+    @await RenderSectionAsync("Styles", false)
+
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="~/favicon.png" sizes="500x500">
+    <base href="~/" />
+</head>
+
+<body>
+    <partial name="Partial/_HeaderPartial" />
+
+    <main role="main" class="pb-4">
+        @RenderBody()
+    </main>
+
+    <partial name="Partial/_FooterPartial" />
+
+    <!--<script src="_framework/blazor.server.js"></script>-->
+
+    <partial name="Partial/_ScriptsPartial" />
+
+    @await RenderSectionAsync("Scripts", false)
+</body>
+
+</html>

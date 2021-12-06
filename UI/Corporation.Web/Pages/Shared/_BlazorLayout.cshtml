@@ -1,0 +1,60 @@
+@using Microsoft.AspNetCore.Components.Web
+@namespace Corporation.Web.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="ru-ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <partial name="Shared/Partial/_StylesPartial" />
+    <link href="Corporation.Web.styles.css" rel="stylesheet" />
+    <link href="~/css/ConnectionErrors.css" rel="stylesheet" asp-append-version="true" />
+
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="~/favicon.png" sizes="500x500">
+
+    <base href="~/" />
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+
+<body>
+    @RenderBody()
+
+    <div id="components-reconnect-modal" class="h4 bg-dark text-center my-2 p-2 components-reconnect-hide">
+        <div class="message">
+            Соединение с сервером blazor потеряно
+        </div>
+        <div class="reconnect">
+            Попытка восстановить соединение с сервером...
+        </div>
+        <div class="failed">
+            Попытка восстановить содениение провалилась.
+            <button class="btn btn-success" onclick="window.Blazor.reconnect()">
+                Переподключиться к серверу
+            </button>
+        </div>
+        <div class="rejected">
+            Сервер отклонил подключение.
+            <button class="btn btn-success" onclick="location.reload()">
+                Перезагрузить приложение
+            </button>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        Обнаружена ошибка приложения. Приложение недоступно пока не будет перезагружено.
+        <button class="btn btn-success" onclick="location.reload()">
+            Перезагрузить приложение
+        </button>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+    <partial name="Shared/Partial/_ScriptsPartial" />
+</body>
+
+</html>

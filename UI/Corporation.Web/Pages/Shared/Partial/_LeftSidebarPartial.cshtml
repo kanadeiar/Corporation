@@ -1,0 +1,35 @@
+<div class="left-sidebar">
+    <h4 class="text-center text-dark bg-info p-2">Отчетность</h4>
+    <div class="accordion accordion-flush" id="accordionInfo">
+        <ul class="nav nav-pills flex-column">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="showRaport">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#genreRaports" aria-expanded="false" aria-controls="genreRaports">
+                        Разделы различных отчетов
+                    </button>
+                </h2>
+                <div id="genreRaports" class="accordion-collapse collapse" aria-labelledby="showRaport"
+                    data-bs-parent="#accordionInfo">
+                    <div class="accordion-body">
+                        <ul class="list-unstyled">
+
+                            <li>
+                                <a asp-page="Index" class="nav-link text-dark fw-light pb-0">
+                                    Обычная отчеты
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <li class="nav-item">
+                <a asp-page="Index" class="nav-link text-dark">
+                    Отчетность прочая
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
