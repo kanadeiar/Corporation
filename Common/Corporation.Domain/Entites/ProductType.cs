@@ -15,7 +15,7 @@ namespace Corporation.Domain.Entites
 
         /// <summary> Номер упаковки вида товаров </summary>
         [Range(0, int.MaxValue, ErrorMessage = "Номер упаковки вида продукта должен быть положительным числом")]
-        public int FormatNumber { get; set; }
+        public int Number { get; set; }
 
         /// <summary> Количество неделимых едениц в одной упаковке </summary>
         [Range(0, int.MaxValue, ErrorMessage = "Количество неделимых едениц в упаковке продукта должно быть положительным числом")]
@@ -39,7 +39,7 @@ namespace Corporation.Domain.Entites
 
         public override string ToString()
         {
-            return $"[{FormatNumber}] {Name}";
+            return $"[{Number}] {Name}";
         }
     }
 }
