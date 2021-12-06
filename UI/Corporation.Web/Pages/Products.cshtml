@@ -1,7 +1,7 @@
-@page "/pages"
-@model IndexModel
+﻿@page
+@model ProductsModel
 @{
-    ViewBag.Title = "Отчет общий";
+    ViewBag.Title = "Отчет - различные продукты корпорации";
 }
 <div class="container">
     <div class="row">
@@ -11,18 +11,20 @@
         <div class="col-sm-9">
             <h1>@ViewBag.Title</h1>
 
-            <p>Страница приложения с формирование различной отчетности.</p>
+            <p>Отчет по продуктам.</p>
+
+
 
         </div>
     </div>
 </div>
 
-
 @functions {
-    public class IndexModel : PageModel
+    public class ProductsModel : PageModel
     {
-        public IndexModel()
+        public void OnGet()
         {
+            
         }
     }
 }

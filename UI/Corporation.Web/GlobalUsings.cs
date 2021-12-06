@@ -11,3 +11,4 @@ global using Microsoft.EntityFrameworkCore;
 global using Corporation.Dal.Data;
 global using Corporation.Interfaces.Services;
 global using Corporation.Services.Database;
+global using Corporation.Services;

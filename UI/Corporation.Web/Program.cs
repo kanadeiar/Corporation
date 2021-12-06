@@ -7,6 +7,8 @@ builder.Host.ConfigureServices(services =>
 
     services.AddScoped<IProductTypeData, DatabaseProductTypeData>();
 
+    services.AddScoped<ProductsInfoService>();
+
     services.AddControllersWithViews().AddRazorRuntimeCompilation();
     services.AddRazorPages().AddRazorRuntimeCompilation();
 });
