@@ -13,9 +13,9 @@ namespace Corporation.Services.Database;
 
 public class DatabaseProductTypeData : IProductTypeData
 {
-    private readonly Plant1Context _context;
+    private readonly CorporationContext _context;
     private readonly ILogger<DatabaseProductTypeData> _logger;
-    public DatabaseProductTypeData(Plant1Context context, ILogger<DatabaseProductTypeData> logger)
+    public DatabaseProductTypeData(CorporationContext context, ILogger<DatabaseProductTypeData> logger)
     {
         _context = context;
         _logger = logger;
@@ -31,7 +31,7 @@ public class DatabaseProductTypeData : IProductTypeData
     }
 
     public async Task<ProductType> GetAsync(int id)
-    {
+    { 
         var result = await _context.ProductTypes.SingleOrDefaultAsync(pt => pt.Id == id).ConfigureAwait(false);
         return result;
     }

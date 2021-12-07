@@ -3,10 +3,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureServices(services =>
 {
-    services.AddDbContext<Plant1Context>(options => options.UseSqlite( builder.Configuration.GetConnectionString("Plant1Connection") ));
-
-    services.AddDbContext<IdentityContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
-    services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>();
+    services.AddDbContext<CorporationContext>(options => options.UseSqlite( builder.Configuration.GetConnectionString("CorporationConnection") ));
+    services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<CorporationContext>();
+    services.Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
 
     services.AddScoped<IProductTypeData, DatabaseProductTypeData>();
 
@@ -17,10 +20,20 @@ builder.Host.ConfigureServices(services =>
 });
 builder.Services.AddServerSideBlazor();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequiredLength = 3;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireDigit = false;
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+});
+
 var app = builder.Build();
 
-SeedTestData.SeedTestDataToDatabase(app.Services);
-IdentitySeedTestData.SeedDatabaseTestData(app.Services, builder.Configuration);
+CorporationSeedTestData.SeedTestDataToDatabase(app.Services, builder.Configuration);
 
 if (app.Environment.IsDevelopment())
 {
@@ -37,6 +50,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseStatusCodePagesWithRedirects("~/home/error/{0}");
 
