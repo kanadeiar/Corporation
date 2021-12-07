@@ -1,13 +1,13 @@
-
-
+// dotnet ef --startup-project ../../UI/Corporation.Web/ migrations add identity --context IdentityContext
+// dotnet ef --startup-project ../../UI/Corporation.Web/ migrations remove --context IdentityContext
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureServices(services =>
 {
-    services.AddDbContext<Plant1Context>(options => options.UseSqlite( builder.Configuration.GetConnectionString("Plant1Connection") ));
+    services.AddDbContext<Plant1Context>(options => options.UseSqlite( builder.Configuration.GetConnectionString("Plant1Connection"), op => op.MigrationsAssembly("Corporation.Dal") ));;
 
-    services.AddDbContext<IdentityContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+    services.AddDbContext<IdentityContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection"), op => op.MigrationsAssembly("Corporation.Dal") ));
     services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>();
     services.Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
     {
