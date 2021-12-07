@@ -5,6 +5,9 @@ builder.Host.ConfigureServices(services =>
 {
     services.AddDbContext<Plant1Context>(options => options.UseSqlite( builder.Configuration.GetConnectionString("Plant1Connection") ));
 
+    services.AddDbContext<IdentityContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+    services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>();
+
     services.AddScoped<IProductTypeData, DatabaseProductTypeData>();
 
     services.AddScoped<ProductsInfoService>();
@@ -17,6 +20,7 @@ builder.Services.AddServerSideBlazor();
 var app = builder.Build();
 
 SeedTestData.SeedTestDataToDatabase(app.Services);
+IdentitySeedTestData.SeedDatabaseTestData(app.Services, builder.Configuration);
 
 if (app.Environment.IsDevelopment())
 {

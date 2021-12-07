@@ -40,7 +40,6 @@ public static class SeedTestData
 
             logger.LogInformation("Complete writing test data to database plant1 ...");
         }
-
     }
 }
 
