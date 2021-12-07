@@ -1,3 +1,5 @@
+// dotnet ef --startup-project ../../UI/Corporation.Web/ migrations add identity --context IdentityContext
+// dotnet ef --startup-project ../../UI/Corporation.Web/ migrations remove --context IdentityContext
 
 var builder = WebApplication.CreateBuilder(args);
 
