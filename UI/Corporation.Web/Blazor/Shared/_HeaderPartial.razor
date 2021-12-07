@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Components.Authorization
 @inherits LayoutComponentBase
 
 <header class="sticky-top">
@@ -8,8 +9,8 @@
                 Корпорация
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -19,13 +20,14 @@
                             Онлайн
                         </NavLink>
                     </li>
-                    <li class="nav-item">
-                        <a href="/home" class="nav-link">Информация</a>
-                    </li>
                 </ul>
+                <AuthorizeView>
+                    <a href="/account" class="btn btn-primary me-1">
+                        <i class="fa fa-user"></i> @context.User.Identity.Name
+                    </a>
+                </AuthorizeView>
                 <div class="d-flex">
-                    <a class="btn btn-outline-info me-1" href="/">Профиль</a>
-                    <a class="btn btn-outline-danger me-1" href="/">Выход</a>
+                    <a class="btn btn-secondary me-1" href="/">Назад</a>
                 </div>
             </div>
         </div>

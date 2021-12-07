@@ -1,0 +1,41 @@
+﻿@model Corporation.Web.Controllers.AccountController.LoginWebModel
+@{
+    ViewBag.Title = "Вход в систему";
+}
+
+<div class="container">
+
+    <h1>@ViewBag.Title</h1>
+
+    <div class="row">
+        <div class="col-sm-6 border-1 shadow rounded bg-light">
+            <div>
+                <form asp-controller="Account" asp-action="Login" asp-antiforgery="true" asp-route-returnUrl="@Model?.ReturnUrl">
+                    <div asp-validation-summary="ModelOnly" class="text-danger alert-danger"></div>
+
+                    <div class="form-group my-1">
+                        <label asp-for="UserName" class="control-label"></label>
+                        <input asp-for="UserName" class="form-control" placeholder="Введите ваш логин пользователя" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group my-1">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" placeholder="Введите ваш пароль" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group my-1">
+                        <span>
+                            <input asp-for="RememberMe" class="checkbox">
+                            <label asp-for="RememberMe" class="control-label"></label>
+                        </span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary my-2">Вход</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -51,6 +51,7 @@ public static class CorporationSeedTestData
                 if (await roleManager.FindByNameAsync(role) is null)
                 {
                     await roleManager.CreateAsync(new IdentityRole(role));
+                    await roleManager.CreateAsync(new IdentityRole("users"));
                 }
 
                 var user = new User
