@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Corporation.Web.Controllers
+﻿namespace Corporation.Web.Controllers
 {
     [Authorize]
     public class AccountController : Controller

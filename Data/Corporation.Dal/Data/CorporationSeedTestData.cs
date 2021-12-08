@@ -41,37 +41,48 @@ public static class CorporationSeedTestData
             UserManager<User> userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            string username = configuration["Data:AdminUser:Name"] ?? "admin";
-            string email = configuration["Data:AdminUser:Email"] ?? "admin@example.com";
-            string password = configuration["Data:AdminUser:Password"] ?? "secret";
-            string role = configuration["Data:AdminUser:Role"] ?? "admins";
+            string adminUsername = configuration["Data:AdminUser:Name"] ?? "admin";
+            string adminEmail = configuration["Data:AdminUser:Email"] ?? "admin@example.com";
+            string adminPassword = configuration["Data:AdminUser:Password"] ?? "secret";
+            string adminRole = configuration["Data:AdminUser:Role"] ?? "admins";
+            string userRole = "users";
 
-            if (await userManager.FindByNameAsync(username) is null)
+            if (await userManager.FindByNameAsync(adminUsername) is null)
             {
-                if (await roleManager.FindByNameAsync(role) is null)
+                if (await roleManager.FindByNameAsync(adminRole) is null)
                 {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                    await roleManager.CreateAsync(new IdentityRole("users"));
+                    await roleManager.CreateAsync(new IdentityRole(adminRole));
+                    await roleManager.CreateAsync(new IdentityRole(userRole));
                 }
 
-                var user = new User
+                var adminUser = new User
                 {
-                    UserName = username,
-                    Email = email,
+                    UserName = adminUsername,
+                    Email = adminEmail,
                 };
-
-                var result = await userManager.CreateAsync(user, password);
+                var result = await userManager.CreateAsync(adminUser, adminPassword);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, role);
-                    logger.LogInformation("{0} Пользователь {1} успешно создан и наделен ролью {2}", DateTime.Now, user.UserName, role);
+                    await userManager.AddToRoleAsync(adminUser, adminRole);
+                    logger.LogInformation("Пользователь {1} успешно создан и наделен ролью {2}", adminUser.UserName, adminRole);
                 }
                 else
                 {
                     var errors = result.Errors.Select(e => e.Description).ToArray();
-                    logger.LogError("Учётная запись администратора не создана по причине: {0}",
+                    logger.LogError("Учётная запись пользователя {0} не создана по причине: {1}", adminUser.UserName,
                         string.Join(",", errors));
-                    throw new InvalidOperationException($"Ошибка при создании пользователя {user.UserName}, список ошибок: {string.Join(",", errors)}");
+                    throw new InvalidOperationException($"Ошибка при создании пользователя {adminUser.UserName}, список ошибок: {string.Join(",", errors)}");
+                }
+
+                var user = new User
+                {
+                    UserName = "user",
+                    Email = "user@example.com",
+                };
+                result = await userManager.CreateAsync(user, "123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, userRole);
                 }
             }
 
