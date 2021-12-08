@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureServices(services =>
 {
     services.AddDbContext<CorporationContext>(options => options.UseSqlite( builder.Configuration.GetConnectionString("CorporationConnection") ));
-    services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<CorporationContext>();
+    services.AddIdentity<User, Role>().AddEntityFrameworkStores<CorporationContext>();
     services.Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
     {
         options.LoginPath = "/Account/Login";

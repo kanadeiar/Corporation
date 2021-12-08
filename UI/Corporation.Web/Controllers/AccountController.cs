@@ -4,11 +4,13 @@
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager,  ILogger<AccountController> logger)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _signInManager = signInManager;
             _logger = logger;
         }
@@ -16,12 +18,13 @@
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            ViewBag.Cookie = Request.Cookies[".AspNetCore.Identity.Application"];
             var model = new IndexWebModel();
             model.Cookie = Request.Cookies[".AspNetCore.Identity.Application"];
             if (User.Identity.IsAuthenticated)
             {
                 model.User = await _userManager.FindByNameAsync(User.Identity.Name);
+                var roles = await _userManager.GetRolesAsync(model.User);
+                model.UserRoleNames = _roleManager.Roles.Where(r => roles.Contains(r.Name)).Select(r => r.RoleName);
             }
             return View(model);
         }
@@ -100,9 +103,12 @@
         /// <summary> Вебмодель сведения о пользователе </summary>
         public class IndexWebModel
         {
+            /// <summary> Куки пользователя </summary>
             public string Cookie { get; set; }
             /// <summary> Сведения о пользовате </summary>
             public User User { get; set; }
+            /// <summary> Роли пользователя </summary>
+            public IEnumerable<string> UserRoleNames { get; set; } = Enumerable.Empty<string>();
         }
 
         /// <summary> Веб модель регистрации </summary>

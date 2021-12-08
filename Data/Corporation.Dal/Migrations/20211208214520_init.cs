@@ -14,6 +14,7 @@ namespace Corporation.Dal.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -28,6 +29,11 @@ namespace Corporation.Dal.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    SurName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Patronymic = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Birthday = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Department = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),

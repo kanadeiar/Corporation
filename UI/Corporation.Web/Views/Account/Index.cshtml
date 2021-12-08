@@ -28,16 +28,45 @@
                     else
                     {
                         <tr>
-                            <th>Куки:</th>
-                            <td class="text-break">@Model.Cookie</td>
-                        </tr>
-                        <tr>
                             <th>Имя пользователя:</th>
                             <td class="text-break">@Model.User.UserName</td>
                         </tr>
                         <tr>
                             <th>Почта пользователя:</th>
                             <td class="text-break">@Model.User.Email</td>
+                        </tr>
+                        <tr>
+                            <th>Фамилия:</th>
+                            <td class="text-break">@Model.User.SurName</td>
+                        </tr>
+                        <tr>
+                            <th>Имя:</th>
+                            <td class="text-break">@Model.User.FirstName</td>
+                        </tr>
+                        <tr>
+                            <th>Отчество:</th>
+                            <td class="text-break">@Model.User.Patronymic</td>
+                        </tr>
+                        <tr>
+                            <th>Дата рождения:</th>
+                            <td class="text-break">@Model.User.Birthday.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <th>Отдел пользователя:</th>
+                            <td class="text-break">@Model.User.Department</td>
+                        </tr>
+                        <tr>
+                            <th>Роли пользователя:</th>
+                            <td class="text-braak">
+                                @foreach (var role in Model.UserRoleNames)
+                                {
+                                    <p>@role</p>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Куки:</th>
+                            <td class="text-break">@Model.Cookie</td>
                         </tr>
                     }
                 </tbody>
