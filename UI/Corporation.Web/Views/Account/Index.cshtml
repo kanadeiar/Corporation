@@ -1,33 +1,48 @@
 ﻿@model Corporation.Web.Controllers.AccountController.IndexWebModel
 @{
-    ViewBag.Title = "Детали пользователя";
+    ViewBag.Title = "Информация по профилю пользователя";
 }
 
 <div class="container">
-    <table class="table table-sm table-bordered">
-        <tbody>
-            @if (Model.User is null)
-            {
-                <tr>
-                    <th class="text-center">Нет сведений об идентификации пользователя</th>
-                </tr>
-            }
-            else
-            {
-                <tr>
-                    <th>Куки:</th>
-                    <td class="text-break">@Model.Cookie</td>
-                </tr>
-                <tr>
-                    <th>Имя пользователя:</th>
-                    <td class="text-break">@Model.User.UserName</td>
-                </tr>
-                <tr>
-                    <th>Почта пользователя:</th>
-                    <td class="text-break">@Model.User.Email</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-sm-3">
+            <partial name="Partial/_AccountLeftSidebarPartial" />
+        </div>
+        <div class="col-sm-9">
+            <h1>@ViewBag.Title</h1>
+
+            <table class="table my-2 table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Параметр</th>
+                        <th>Значение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.User is null)
+                    {
+                        <tr>
+                            <th class="text-center">Нет сведений об идентификации пользователя</th>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th>Куки:</th>
+                            <td class="text-break">@Model.Cookie</td>
+                        </tr>
+                        <tr>
+                            <th>Имя пользователя:</th>
+                            <td class="text-break">@Model.User.UserName</td>
+                        </tr>
+                        <tr>
+                            <th>Почта пользователя:</th>
+                            <td class="text-break">@Model.User.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
