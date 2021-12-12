@@ -1,0 +1,40 @@
+@model Corporation.Web.Controllers.AccountController.RoleEditWebModel;
+@{
+    ViewBag.Title = "Редактирование одной роли";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <partial name="Partial/_AccountLeftSidebarPartial" />
+        </div>
+        <div class="col-sm-9">
+            <h1>@ViewBag.Title</h1>
+
+            <div class="col-sm-6 border-1 shadow rounded bg-light p-2">
+                <form asp-controller="Account" asp-antiforgery="true" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="RoleName" class="control-label"></label>
+                        <input asp-for="RoleName" class="form-control" />
+                        <span asp-validation-for="RoleName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group my-2">
+                        <button asp-action="RoleEdit" class="btn btn-primary">Сохранить</button>
+                        <a asp-controller="Account" asp-action="RoleList" class="btn btn-secondary">Назад</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
