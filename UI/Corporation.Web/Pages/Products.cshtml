@@ -1,0 +1,30 @@
+﻿@page
+@model Corporation.Web.Pages.ProductsModel
+@{
+    ViewBag.Title = "Отчет - различные продукты корпорации";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <partial name="Partial/_LeftSidebarPartial" />
+        </div>
+        <div class="col-sm-9 border rounded shadow bg-light">
+            <h1>@ViewBag.Title</h1>
+
+            <p>Отчет по продуктам.</p>
+
+            @foreach (var info in Model.ProductInfos)
+            {
+                <dl class="row">
+                    <dt class="col-sm-12">Название товара: @info.Name </dt>
+                    <dt class="col-sm-4">Номер формата: @info.Number </dt>
+                    <dd class="col-sm-4">Объем одной упаковки: @info.Volume м3</dd>
+                    <dd class="col-sm-4">Количество едениц в упаковке: @info.Units шт.</dd>
+                </dl>
+            }
+
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,8 @@
+﻿<div class="pull-right d-grid gap-1 d-md-inline-block">
+    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">
+        <i class="fas fa-address-book"></i> Регистрация
+    </a>
+    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary">
+        <i class="fa fa-lock"></i> Вход
+    </a>
+</div>

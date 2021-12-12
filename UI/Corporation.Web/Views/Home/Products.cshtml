@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Информация по продукции";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <partial name="Partial/_LeftSidebarPartial" />
+        </div>
+        <div class="col-sm-9">
+            <h1>@ViewBag.Title</h1>
+
+            <div class="p-2 my-4 border rounded shadow bg-light">
+                <h2>Информация по товарам</h2>
+
+                @foreach (var info in ViewBag.ProductInfos)
+                {
+                    <dl class="row">
+                        <dt class="col-sm-12">Название товара: @info.Name </dt>
+                        <dt class="col-sm-4">Номер формата: @info.Number </dt>
+                        <dd class="col-sm-4">Объем одной упаковки: @info.Volume м3</dd>
+                        <dd class="col-sm-4">Количество едениц в упаковке: @info.Units шт.</dd>
+                    </dl>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

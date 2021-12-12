@@ -8,7 +8,18 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Corporation.Interfaces\Corporation.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Data\Corporation.Dal\Corporation.Dal.csproj" />
+    <ProjectReference Include="..\..\Services\Corporation.Services\Corporation.Services.csproj" />
   </ItemGroup>
 
 </Project>

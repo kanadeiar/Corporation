@@ -1,6 +1,15 @@
+@using Microsoft.AspNetCore.Components.Authorization
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(_Layout)" />
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(_Layout)">
+            <NotAuthorized Context="authContext">
+                <h4 class="bg-danger text-white text-center p-2">Недостаточно прав</h4>
+                <div class="text-center">
+                    Недостаточно прав для доступа к этому разделу приложения
+                </div>
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        @*<RouteView RouteData="@routeData" DefaultLayout="@typeof(_Layout)" />*@
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>

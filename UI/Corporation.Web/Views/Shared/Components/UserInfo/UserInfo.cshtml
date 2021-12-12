@@ -1,0 +1,11 @@
+﻿<div class="pull-right d-grid gap-1 d-md-inline-block">
+    <a class="btn btn-dark" href="/online">
+        <i class="fas fa-mouse-pointer"></i> Онлайн
+    </a>
+    <a asp-controller="Account" asp-action="Index" class="btn btn-primary">
+        <i class="fa fa-user"></i> @User.Identity?.Name
+    </a>
+    <a asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary">
+        <i class="fa fa-unlock"></i> Выход
+    </a>
+</div>

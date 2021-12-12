@@ -7,6 +7,12 @@ public class HomeController : Controller
         return View();
     }
 
+    public async Task<IActionResult> Products([FromServices] ProductsInfoService productsInfoService)
+    {
+        ViewBag.ProductInfos = await productsInfoService.GetInfoForProducts();
+        return View();
+    }
+
     public IActionResult About()
     {
         return View();
