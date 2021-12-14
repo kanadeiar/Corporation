@@ -1,6 +1,6 @@
-@model IEnumerable<Corporation.Web.Controllers.AccountController.RoleWebModel>
+﻿@model IEnumerable<Corporation.Web.Controllers.AccountController.UserWebModel>
 @{
-    ViewBag.Title = "Список ролей пользователей";
+    ViewBag.Title = "Список пользователей системы";
 }
 
 <div class="container">
@@ -12,22 +12,26 @@
             <h1>@ViewBag.Title</h1>
             <div class="table-responsive border-1 shadow rounded bg-light p-2">
                 <div class="my-2">
-                    <a asp-controller="Account" asp-action="RoleEdit" class="btn btn-success">Создать новую роль пользователей</a>
+                    <a href="#" class="btn btn-success">Создать нового пользователя</a>
                 </div>
                 <table class="table my-2 table-bordered table-striped">
                     <thead>
-                        <tr>
-                            <th>Имя</th>
-                            <th>Описание</th>
-                            <th>Пользователи</th>
-                            <th></th>
-                        </tr>
+                    <tr>
+                        <th>Фамилия</th>
+                        <th>Имя</th>
+                        <th>Отчество</th>
+                        <th>Логин</th>
+                        <th>Почта</th>
+                        <th>Возраст</th>
+                        <th>Отдел</th>
+                        <th></th>
+                    </tr>
                     </thead>
                     <tbody>
                     @if (Model.Count() == 0)
                     {
                         <tr>
-                            <td colspan="4" class="text-center">Нет ролей пользователей</td>
+                            <td colspan="9" class="text-center">Нет ролей пользователей</td>
                         </tr>
                     }
                     else
@@ -35,13 +39,17 @@
                         @foreach (var role in Model)
                         {
                             <tr>
-                                <td>@role.Name</td>
-                                <td>@role.RoleName</td>
-                                <td>@role.UsersCount шт.: @role.UsersNames</td>
+                                <td>@role.SurName</td>
+                                <td>@role.FirstName</td>
+                                <td>@role.Patronymic</td>
+                                <td>@role.UserName</td>
+                                <td>@role.Email</td>
+                                <td>@role.Age</td>
+                                <td>@role.Department</td>
                                 <td class="text-center">
-                                    <a asp-controller="Account" asp-action="RoleEdit" asp-route-id="@role.Id"
+                                    <a href="#"
                                        class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
-                                    <a asp-controller="Account" asp-action="DeleteRole" asp-route-id="@role.Id"
+                                    <a href="#"
                                        class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
@@ -50,6 +58,7 @@
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
 </div>

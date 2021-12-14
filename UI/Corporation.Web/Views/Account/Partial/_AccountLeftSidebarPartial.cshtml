@@ -7,9 +7,17 @@
                     Информация по профилю
                 </a>
             </li>
+            @if (User.IsInRole("admins"))
+            {
             <li class="nav-item">
                 <a asp-controller="Account" asp-action="RoleList" class="nav-link text-dark">
                     Роли пользователей
+                </a>
+            </li>
+            }
+            <li class="nav-item">
+                <a asp-controller="Account" asp-action="UserList" class="nav-link text-dark">
+                    Пользователи
                 </a>
             </li>
         </ul>

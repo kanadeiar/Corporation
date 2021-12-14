@@ -31,6 +31,7 @@
 
         #region Роли пользователей
 
+        [Authorize(Roles = "admins")]
         public async Task<IActionResult> RoleList()
         {
             var roles = _roleManager.Roles;
@@ -53,12 +54,14 @@
         }
 
         /// <summary> Создание новой роли </summary>
+        [Authorize(Roles = "admins")]
         public async Task<IActionResult> RoleCreate()
         {
             return View("RoleEdit", new RoleEditWebModel());
         }
 
         /// <summary> Редактирование роли </summary>
+        [Authorize(Roles = "admins")]
         public async Task<IActionResult> RoleEdit(string? id)
         {
             if (string.IsNullOrEmpty(id))
@@ -77,6 +80,7 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "admins")]
         public async Task<IActionResult> RoleEdit(RoleEditWebModel model)
         {
             if (model is null)
@@ -116,6 +120,7 @@
             }
         }
 
+        [Authorize(Roles = "admins")]
         public async Task<IActionResult> DeleteRole(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -139,6 +144,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "admins")]
         public async Task<IActionResult> DeleteRoleConfirmed(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -155,7 +161,23 @@
 
         #region Пользователи
 
-        
+        public async Task<IActionResult> UserList()
+        {
+            var users = _userManager.Users;
+            var models = await users.Select(u => new UserWebModel
+                { 
+                    Id = u.Id,
+                    SurName = u.SurName,
+                    FirstName = u.FirstName,
+                    Patronymic = u.Patronymic,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    BirthDay = u.Birthday,
+                    Age = DateTime.Today.Year - u.Birthday.Year,
+                    Department = u.Department,
+                }).ToArrayAsync();
+            return View(models);
+        }
 
         #endregion
 
@@ -230,6 +252,8 @@
             return View();
         }
 
+        #region Поддержка
+
         /// <summary> Вебмодель сведения о пользователе </summary>
         public class IndexWebModel
         {
@@ -246,13 +270,9 @@
         {
             public string Id { get; set; }
 
-            [Required(ErrorMessage = "Системное имя роли обязательна для роли пользователей")]
-            [StringLength(200, MinimumLength = 3, ErrorMessage = "Системное имя роли должно быть длинной от 3 до 200 символов")]
             [Display(Name = "Название роли пользователей")]
             public string Name { get; set; }
 
-            [Required(ErrorMessage = "Название обязательна для роли пользователей")]
-            [StringLength(200, MinimumLength = 3, ErrorMessage = "Название роли должно быть длинной от 3 до 200 символов")]
             [Display(Name = "Описание роли пользователей")]
             public string RoleName { get; set; }
 
@@ -278,6 +298,36 @@
             [StringLength(200, MinimumLength = 3, ErrorMessage = "Название роли должно быть длинной от 3 до 200 символов")]
             [Display(Name = "Описание роли пользователей")]
             public string RoleName { get; set; }
+        }
+
+        /// <summary> Вебмодель просмотра пользователя </summary>
+        public class UserWebModel
+        {
+            public string Id { get; set; }
+            
+            [Display(Name = "Фамилия пользователя")]
+            public string SurName { get; set; }
+
+            [Display(Name = "Имя пользователя")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Отчество пользователя")]
+            public string Patronymic { get; set; }
+
+            [Display(Name = "Логин пользователя")]
+            public string UserName { get; set; }
+
+            [Display(Name = "Почта пользователя")]
+            public string Email { get; set; }
+
+            [Display(Name = "Возраст")]
+            public int Age { get; set; }
+
+            [Display(Name = "Дата рождения")]
+            public DateTime BirthDay { get; set; }
+
+            [Display(Name = "Отдел")]
+            public string Department { get; set; }
         }
 
         /// <summary> Веб модель регистрации </summary>
@@ -326,7 +376,7 @@
             [HiddenInput(DisplayValue = false)]
             public string ReturnUrl { get; set; }
         }
+
+        #endregion
     }
-
-
 }
