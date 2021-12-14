@@ -43,10 +43,11 @@
             foreach (var item in models)
             {
                 var users = await _userManager.GetUsersInRoleAsync(item.Name);
-                string result = users.Count() == 0
+                string result = !users.Any()
                     ? "Нет пользователей"
                     : string.Join(", ", users.Take(3).Select(u => $"{u.SurName} {u.FirstName[0]}. {u.Patronymic[0]}.").ToArray());
                 item.UsersNames = users.Count() > 3 ? $"{result}, и др." : result;
+                item.UsersCount = users.Count;
             };
             return View(models);
         }
@@ -54,10 +55,10 @@
         /// <summary> Создание новой роли </summary>
         public async Task<IActionResult> RoleCreate()
         {
-            return View("Edit", new RoleEditWebModel());
+            return View("RoleEdit", new RoleEditWebModel());
         }
 
-        /// <summary> Редактирование новой роли </summary>
+        /// <summary> Редактирование роли </summary>
         public async Task<IActionResult> RoleEdit(string? id)
         {
             if (string.IsNullOrEmpty(id))
@@ -128,6 +129,12 @@
                 Name = r.Name,
                 RoleName = r.RoleName,
             };
+            var users = await _userManager.GetUsersInRoleAsync(r.Name);
+            string result = !users.Any()
+                ? "Нет пользователей"
+                : string.Join(", ", users.Take(3).Select(u => $"{u.SurName} {u.FirstName[0]}. {u.Patronymic[0]}.").ToArray());
+            model.UsersNames = users.Count() > 3 ? $"{result}, и др." : result;
+            model.UsersCount = users.Count;
             return View(model);
         }
 
@@ -137,9 +144,18 @@
             if (string.IsNullOrEmpty(id))
                 return BadRequest();
             var role = await _roleManager.FindByIdAsync(id);
+            var users = await _userManager.GetUsersInRoleAsync(role.Name);
+            if (users.Any())
+                return BadRequest();
             await _roleManager.DeleteAsync(role);
             return RedirectToAction("RoleList", "Account");
         }
+
+        #endregion
+
+        #region Пользователи
+
+        
 
         #endregion
 
@@ -232,26 +248,35 @@
 
             [Required(ErrorMessage = "Системное имя роли обязательна для роли пользователей")]
             [StringLength(200, MinimumLength = 3, ErrorMessage = "Системное имя роли должно быть длинной от 3 до 200 символов")]
+            [Display(Name = "Название роли пользователей")]
             public string Name { get; set; }
 
             [Required(ErrorMessage = "Название обязательна для роли пользователей")]
             [StringLength(200, MinimumLength = 3, ErrorMessage = "Название роли должно быть длинной от 3 до 200 символов")]
+            [Display(Name = "Описание роли пользователей")]
             public string RoleName { get; set; }
 
+            [Display(Name = "Пользователи, имеющие эту роль")]
             public string UsersNames { get; set; }
+
+            [Display(Name = "Количество пользователей у роли")]
+            public int UsersCount { get; set; }
         }
 
         /// <summary> Веб модель редактирования роли пользователей </summary>
         public class RoleEditWebModel
         {
-            public string Id { get; set; }
+            [HiddenInput(DisplayValue = false)]
+            public string? Id { get; set; }
 
             [Required(ErrorMessage = "Системное имя роли обязательна для роли пользователей")]
             [StringLength(200, MinimumLength = 3, ErrorMessage = "Системное имя роли должно быть длинной от 3 до 200 символов")]
+            [Display(Name = "Название роли пользователей")]
             public string Name { get; set; }
 
             [Required(ErrorMessage = "Название обязательна для роли пользователей")]
             [StringLength(200, MinimumLength = 3, ErrorMessage = "Название роли должно быть длинной от 3 до 200 символов")]
+            [Display(Name = "Описание роли пользователей")]
             public string RoleName { get; set; }
         }
 

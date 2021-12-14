@@ -1,6 +1,6 @@
 @model Corporation.Web.Controllers.AccountController.RoleWebModel
 @{
-    ViewBag.Title = "Удаление роли";
+    ViewBag.Title = "Удаление роли пользователей";
 }
 
 <div class="container">
@@ -12,28 +12,48 @@
             <h1>@ViewBag.Title</h1>
 
             <div class="border-1 shadow rounded bg-light p-2">
-                <h3>Действительно удалить роль с описанием @Model.RoleName, системное имя: @Model.Name?</h3>
+
+                <h5 class="my-4">Вы действительно удалить роль с описанием @Model.RoleName, системное имя: @Model.Name?</h5>
 
                 @Html.HiddenFor(Model => Model.Id)
 
                 <dl class="row">
-                    <dt class="col-sm-3">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Name)
                     </dt>
-                    <dd class="col-sm-9">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.Name)
                     </dd>
-                    <dt class="col-sm-3">
+                    <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.RoleName)
                     </dt>
-                    <dd class="col-sm-9">
+                    <dd class="col-sm-8">
                         @Html.DisplayFor(model => model.RoleName)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.UsersCount)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.UsersCount)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.UsersNames)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.UsersNames)
                     </dd>
                 </dl>
 
                 <div class="form-group my-2">
-                    <form asp-controller="Workers" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
-                        <input type="submit" value="Подтвердить удаление сотрудника" class="btn btn-danger" />
+                    @if (Model.UsersCount != 0)
+                    {
+                        <div class="alert-warning p-2 my-4">
+                            <h5>Нельзя! Нельзя удалить роль пользователей, которая используется хотя-бы одним пользователем</h5>
+                        </div>
+                    }
+
+                    <form asp-controller="Account" asp-action="DeleteRoleConfirmed" asp-route-id="@Model.Id">
+                        <input type="submit" value="Подтвердить удаление роли пользователей" class="btn btn-danger @((Model.UsersCount != 0) ? "disabled" : "")"/>
                         <a asp-controller="Account" asp-action="RoleList" class="btn btn-secondary">Назад</a>
                     </form>
 
