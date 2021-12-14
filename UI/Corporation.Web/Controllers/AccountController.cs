@@ -121,7 +121,7 @@
 
             [Required(ErrorMessage = "Нужно обязательно ввести свой адрес электронной почты")]
             [EmailAddress(ErrorMessage = "Нужно ввести корректный адрес своей электронной почты")]
-            [Display(Name = "Адрес электронной почты e-mail")]
+            [Display(Name = "Адрес электронной почты E-mail")]
             public string Email { get; set; }
 
             /// <summary> Пароль </summary>

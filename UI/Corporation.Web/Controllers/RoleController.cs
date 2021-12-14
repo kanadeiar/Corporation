@@ -64,9 +64,7 @@ namespace Corporation.Web.Controllers
             if (model is null)
                 return BadRequest();
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
             var role = await _roleManager.FindByIdAsync(model.Id);
             IdentityResult result;
             if (role is null)
@@ -85,17 +83,13 @@ namespace Corporation.Web.Controllers
                 result = await _roleManager.UpdateAsync(role);
             }
             if (result.Succeeded)
-            {
                 return RedirectToAction("Index", "Role");
-            }
-            else
+            foreach (var error in result.Errors)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-                return View(model);
+                ModelState.AddModelError("", error.Description);
             }
+            return View(model);
+
         }
 
         public async Task<IActionResult> Delete(string id)
