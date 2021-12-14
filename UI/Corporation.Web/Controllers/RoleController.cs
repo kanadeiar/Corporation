@@ -130,6 +130,18 @@ public class RoleController : Controller
         return RedirectToAction("Index", "Role");
     }
 
+    #region WebAPI
+
+    [AllowAnonymous]
+    public async Task<IActionResult> IsNameFree(string Name)
+    {
+        await Task.Delay(1000);
+        var role = await _roleManager.FindByNameAsync(Name);
+        return Json(role is null ? "true" : "Роль пользователей с таким именем уже существует");
+    }
+
+    #endregion
+
     #region Вспомогательные вебмодели
 
     /// <summary> Веб модель просмотра роли пользователей </summary>
@@ -159,6 +171,7 @@ public class RoleController : Controller
         [Required(ErrorMessage = "Системное имя роли обязательна для роли пользователей")]
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Системное имя роли должно быть длинной от 3 до 200 символов")]
         [Display(Name = "Название роли пользователей")]
+        [Remote("IsNameFree", "Role")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Название обязательна для роли пользователей")]

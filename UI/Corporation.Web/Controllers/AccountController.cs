@@ -92,6 +92,18 @@ public class AccountController : Controller
 
     #endregion
 
+    #region WebAPI
+
+    [AllowAnonymous]
+    public async Task<IActionResult> IsNameFree(string UserName)
+    {
+        await Task.Delay(1000);
+        var user = await _userManager.FindByNameAsync(UserName);
+        return Json(user is null ? "true" : "Пользователь с таким имененем уже существует");
+    }
+
+    #endregion
+
     [AllowAnonymous]
     public IActionResult AccessDenied()
     {
@@ -143,18 +155,16 @@ public class AccountController : Controller
         [Display(Name = "Отдел пользователя")]
         public string Department { get; set; }
 
-        /// <summary> Логин пользователя </summary>
         [Required(ErrorMessage = "Нужно обязательно ввести логин пользователя")]
         [Display(Name = "Логин пользователя")]
+        [Remote("IsNameFree", "Account")]
         public string UserName { get; set; }
 
-        /// <summary> Пароль </summary>
         [Required(ErrorMessage = "Нужно обязательно придумать и ввести какой-либо пароль")]
         [Display(Name = "Пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        /// <summary> Подтверждение пароля </summary>
         [Required(ErrorMessage = "Нужно обязательно ввести подтверждение пароля")]
         [Display(Name = "Подтверждение пароля")]
         [DataType(DataType.Password)]
@@ -165,19 +175,18 @@ public class AccountController : Controller
     /// <summary> Веб модель входа в систему </summary>
     public class LoginWebModel
     {
-        /// <summary> Имя пользователя </summary>
         [Required(ErrorMessage = "Нужно обязательно ввести логин пользователя")]
         [Display(Name = "Логин пользователя")]
         public string UserName { get; set; }
-        /// <summary> Пароль пользователя </summary>
+
         [Required(ErrorMessage = "Нужно обязательно ввести свой пароль")]
         [Display(Name = "Пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        /// <summary> Запомнить этого пользователя </summary>
+
         [Display(Name = "Запомнить меня")]
         public bool RememberMe { get; set; }
-        /// <summary> Возвращение на страницу </summary>
+
         [HiddenInput(DisplayValue = false)]
         public string ReturnUrl { get; set; }
     }
