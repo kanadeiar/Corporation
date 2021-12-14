@@ -9,20 +9,22 @@
         <div class="col-sm-3">
             <partial name="Partial/_LeftSidebarPartial" />
         </div>
-        <div class="col-sm-9 border rounded shadow bg-light">
-            <h1>@ViewBag.Title</h1>
+        <div class="col-sm-9">
+            <h1 class="text-center">@ViewBag.Title</h1>
+            
+            <div class="border rounded shadow bg-light p-1">
+                <p>Отчет по продуктам.</p>
 
-            <p>Отчет по продуктам.</p>
-
-            @foreach (var info in Model.ProductInfos)
-            {
-                <dl class="row">
-                    <dt class="col-sm-12">Название товара: @info.Name </dt>
-                    <dt class="col-sm-4">Номер формата: @info.Number </dt>
-                    <dd class="col-sm-4">Объем одной упаковки: @info.Volume м3</dd>
-                    <dd class="col-sm-4">Количество едениц в упаковке: @info.Units шт.</dd>
-                </dl>
-            }
+                @foreach (var info in Model.ProductInfos)
+                {
+                    <dl class="row">
+                        <dt class="col-sm-12">Название товара: @info.Name </dt>
+                        <dt class="col-sm-4">Номер формата: @info.Number </dt>
+                        <dd class="col-sm-4">Объем одной упаковки: @info.Volume м3</dd>
+                        <dd class="col-sm-4">Количество едениц в упаковке: @info.Units шт.</dd>
+                    </dl>
+                }
+            </div>
 
         </div>
     </div>

@@ -1,6 +1,6 @@
 ﻿@model Corporation.Web.Controllers.RoleController.RoleEditWebModel;
 @{
-    ViewBag.Title = "Редактирование одной роли";
+    ViewBag.Title = "Редактирование роли";
 }
 
 <div class="container">
@@ -12,8 +12,8 @@
             <h1>@ViewBag.Title</h1>
 
             <div class="col-sm-6 border-1 shadow rounded bg-light p-2">
-                <form asp-controller="Account" asp-antiforgery="true" enctype="multipart/form-data">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <form asp-controller="Role" asp-antiforgery="true" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger alert-danger p-2"></div>
 
                     <input type="hidden" asp-for="Id" />
 

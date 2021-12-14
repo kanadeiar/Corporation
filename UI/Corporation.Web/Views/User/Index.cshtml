@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Corporation.Web.Controllers.UserController.UserWebModel>
 @{
-    ViewBag.Title = "Список пользователей системы";
+    ViewBag.Title = "Список пользователей";
 }
 
 <div class="container">
@@ -12,7 +12,7 @@
             <h1>@ViewBag.Title</h1>
             <div class="table-responsive border-1 shadow rounded bg-light p-2">
                 <div class="my-2">
-                    <a href="#" class="btn btn-success">Создать нового пользователя</a>
+                    <a asp-controller="User" asp-action="Create" class="btn btn-success">Создать нового пользователя</a>
                 </div>
                 <table class="table my-2 table-bordered table-striped">
                     <thead>
@@ -36,20 +36,20 @@
                     }
                     else
                     {
-                        @foreach (var role in Model)
+                        @foreach (var user in Model)
                         {
                             <tr>
-                                <td>@role.SurName</td>
-                                <td>@role.FirstName</td>
-                                <td>@role.Patronymic</td>
-                                <td>@role.UserName</td>
-                                <td>@role.Email</td>
-                                <td>@role.Age</td>
-                                <td>@role.Department</td>
+                                <td>@user.SurName</td>
+                                <td>@user.FirstName</td>
+                                <td>@user.Patronymic</td>
+                                <td>@user.UserName</td>
+                                <td>@user.Email</td>
+                                <td>@user.Age</td>
+                                <td>@user.Department</td>
                                 <td class="text-center">
-                                    <a href="#"
+                                    <a asp-controller="User" asp-action="Edit" asp-route-id="@user.Id"
                                        class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Редактировать</a>
-                                    <a href="#"
+                                    <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id"
                                        class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>

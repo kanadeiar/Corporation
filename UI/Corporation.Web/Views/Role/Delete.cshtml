@@ -13,7 +13,7 @@
 
             <div class="border-1 shadow rounded bg-light p-2">
 
-                <h5 class="my-4">Вы действительно удалить роль с описанием @Model.RoleName, системное имя: @Model.Name?</h5>
+                <h5 class="my-4">Вы действительно хотите удалить роль пользователей с описанием @Model.RoleName, и именем: @Model.Name?</h5>
 
                 @Html.HiddenFor(Model => Model.Id)
 
@@ -48,11 +48,17 @@
                     @if (Model.UsersCount != 0)
                     {
                         <div class="alert-warning p-2 my-4">
-                            <h5>Нельзя! Нельзя удалить роль пользователей, которая используется хотя-бы одним пользователем</h5>
+                            <h5>Нельзя! Нельзя удалить роль пользователей, которая используется хотя-бы одним пользователем!</h5>
+                        </div>
+                    }
+                    @if (Model.Name == "admins")
+                    {
+                        <div class="alert-warning p-2 my-4">
+                            <h5>Нельзя! Нельзя удалить роль администраторов, это роль, которая должна обязательно оставаться в системе!</h5>
                         </div>
                     }
                     <form asp-controller="Role" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
-                        <input type="submit" value="Подтвердить удаление роли пользователей" class="btn btn-danger @((Model.UsersCount != 0) ? "disabled" : "")"/>
+                        <input type="submit" value="Подтвердить удаление роли пользователей" class="btn btn-danger @((Model.UsersCount != 0 || Model.Name == "admins") ? "disabled" : "")"/>
                         <a asp-controller="Role" asp-action="Index" class="btn btn-secondary">Назад</a>
                     </form>
                 </div>
