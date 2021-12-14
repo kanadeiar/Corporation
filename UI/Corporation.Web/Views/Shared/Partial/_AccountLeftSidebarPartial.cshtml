@@ -10,13 +10,13 @@
             @if (User.IsInRole("admins"))
             {
             <li class="nav-item">
-                <a asp-controller="Account" asp-action="RoleList" class="nav-link text-dark">
+                <a asp-controller="Role" asp-action="Index" class="nav-link text-dark">
                     Роли пользователей
                 </a>
             </li>
             }
             <li class="nav-item">
-                <a asp-controller="Account" asp-action="UserList" class="nav-link text-dark">
+                <a asp-controller="User" asp-action="Index" class="nav-link text-dark">
                     Пользователи
                 </a>
             </li>

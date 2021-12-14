@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\Services\Corporation.Services\Corporation.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Account\Partial\" />
+  </ItemGroup>
+
 </Project>

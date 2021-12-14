@@ -1,4 +1,4 @@
-@model IEnumerable<Corporation.Web.Controllers.AccountController.RoleWebModel>
+﻿@model IEnumerable<Corporation.Web.Controllers.RoleController.RoleWebModel>
 @{
     ViewBag.Title = "Список ролей пользователей";
 }
@@ -12,7 +12,7 @@
             <h1>@ViewBag.Title</h1>
             <div class="table-responsive border-1 shadow rounded bg-light p-2">
                 <div class="my-2">
-                    <a asp-controller="Account" asp-action="RoleEdit" class="btn btn-success">Создать новую роль пользователей</a>
+                    <a asp-controller="Role" asp-action="Create" class="btn btn-success">Создать новую роль пользователей</a>
                 </div>
                 <table class="table my-2 table-bordered table-striped">
                     <thead>
@@ -39,9 +39,9 @@
                                 <td>@role.RoleName</td>
                                 <td>@role.UsersCount шт.: @role.UsersNames</td>
                                 <td class="text-center">
-                                    <a asp-controller="Account" asp-action="RoleEdit" asp-route-id="@role.Id"
-                                       class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
-                                    <a asp-controller="Account" asp-action="DeleteRole" asp-route-id="@role.Id"
+                                    <a asp-controller="Role" asp-action="Edit" asp-route-id="@role.Id"
+                                       class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Редактировать</a>
+                                    <a asp-controller="Role" asp-action="Delete" asp-route-id="@role.Id"
                                        class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>

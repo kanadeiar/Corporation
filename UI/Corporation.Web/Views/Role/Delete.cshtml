@@ -1,4 +1,4 @@
-@model Corporation.Web.Controllers.AccountController.RoleWebModel
+﻿@model Corporation.Web.Controllers.RoleController.RoleWebModel
 @{
     ViewBag.Title = "Удаление роли пользователей";
 }
@@ -51,14 +51,13 @@
                             <h5>Нельзя! Нельзя удалить роль пользователей, которая используется хотя-бы одним пользователем</h5>
                         </div>
                     }
-
-                    <form asp-controller="Account" asp-action="DeleteRoleConfirmed" asp-route-id="@Model.Id">
+                    <form asp-controller="Role" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
                         <input type="submit" value="Подтвердить удаление роли пользователей" class="btn btn-danger @((Model.UsersCount != 0) ? "disabled" : "")"/>
-                        <a asp-controller="Account" asp-action="RoleList" class="btn btn-secondary">Назад</a>
+                        <a asp-controller="Role" asp-action="Index" class="btn btn-secondary">Назад</a>
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+

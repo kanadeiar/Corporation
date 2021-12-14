@@ -6,13 +6,11 @@
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<AccountController> _logger;
-        public AccountController(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
-            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -28,158 +26,6 @@
             }
             return View(model);
         }
-
-        #region Роли пользователей
-
-        [Authorize(Roles = "admins")]
-        public async Task<IActionResult> RoleList()
-        {
-            var roles = _roleManager.Roles;
-            var models = await roles.Select(r => new RoleWebModel
-            {
-                Id = r.Id,
-                Name = r.Name,
-                RoleName = r.RoleName,
-            }).ToListAsync();
-            foreach (var item in models)
-            {
-                var users = await _userManager.GetUsersInRoleAsync(item.Name);
-                string result = !users.Any()
-                    ? "Нет пользователей"
-                    : string.Join(", ", users.Take(3).Select(u => $"{u.SurName} {u.FirstName[0]}. {u.Patronymic[0]}.").ToArray());
-                item.UsersNames = users.Count() > 3 ? $"{result}, и др." : result;
-                item.UsersCount = users.Count;
-            };
-            return View(models);
-        }
-
-        /// <summary> Создание новой роли </summary>
-        [Authorize(Roles = "admins")]
-        public async Task<IActionResult> RoleCreate()
-        {
-            return View("RoleEdit", new RoleEditWebModel());
-        }
-
-        /// <summary> Редактирование роли </summary>
-        [Authorize(Roles = "admins")]
-        public async Task<IActionResult> RoleEdit(string? id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return View(new RoleEditWebModel());
-            if (await _roleManager.FindByIdAsync(id) is { } role)
-            {
-                var model = new RoleEditWebModel
-                {
-                    Id = role.Id,
-                    Name = role.Name,
-                    RoleName = role.RoleName,
-                };
-                return View(model);
-            }
-            return NotFound();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "admins")]
-        public async Task<IActionResult> RoleEdit(RoleEditWebModel model)
-        {
-            if (model is null)
-                return BadRequest();
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var role = await _roleManager.FindByIdAsync(model.Id);
-            IdentityResult result;
-            if (role is null)
-            {
-                var newRole = new Role
-                {
-                    Name = model.Name,
-                    RoleName = model.RoleName,
-                };
-                result = await _roleManager.CreateAsync(newRole);
-            }
-            else
-            {
-                role.Name = model.Name;
-                role.RoleName = model.RoleName;
-                result = await _roleManager.UpdateAsync(role);
-            }
-            if (result.Succeeded)
-            {
-                return RedirectToAction("RoleList", "Account");
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-                return View(model);
-            }
-        }
-
-        [Authorize(Roles = "admins")]
-        public async Task<IActionResult> DeleteRole(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return BadRequest();
-            var r = await _roleManager.FindByIdAsync(id);
-            if (r is null)
-                return NotFound();
-            var model = new RoleWebModel
-            {
-                Id = r.Id,
-                Name = r.Name,
-                RoleName = r.RoleName,
-            };
-            var users = await _userManager.GetUsersInRoleAsync(r.Name);
-            string result = !users.Any()
-                ? "Нет пользователей"
-                : string.Join(", ", users.Take(3).Select(u => $"{u.SurName} {u.FirstName[0]}. {u.Patronymic[0]}.").ToArray());
-            model.UsersNames = users.Count() > 3 ? $"{result}, и др." : result;
-            model.UsersCount = users.Count;
-            return View(model);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "admins")]
-        public async Task<IActionResult> DeleteRoleConfirmed(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return BadRequest();
-            var role = await _roleManager.FindByIdAsync(id);
-            var users = await _userManager.GetUsersInRoleAsync(role.Name);
-            if (users.Any())
-                return BadRequest();
-            await _roleManager.DeleteAsync(role);
-            return RedirectToAction("RoleList", "Account");
-        }
-
-        #endregion
-
-        #region Пользователи
-
-        public async Task<IActionResult> UserList()
-        {
-            var users = _userManager.Users;
-            var models = await users.Select(u => new UserWebModel
-                { 
-                    Id = u.Id,
-                    SurName = u.SurName,
-                    FirstName = u.FirstName,
-                    Patronymic = u.Patronymic,
-                    UserName = u.UserName,
-                    Email = u.Email,
-                    BirthDay = u.Birthday,
-                    Age = DateTime.Today.Year - u.Birthday.Year,
-                    Department = u.Department,
-                }).ToArrayAsync();
-            return View(models);
-        }
-
-        #endregion
 
         #region Регистрация пользователя
 
@@ -263,71 +109,6 @@
             public User User { get; set; }
             /// <summary> Роли пользователя </summary>
             public IEnumerable<string> UserRoleNames { get; set; } = Enumerable.Empty<string>();
-        }
-
-        /// <summary> Веб модель просмотра роли пользователей </summary>
-        public class RoleWebModel
-        {
-            public string Id { get; set; }
-
-            [Display(Name = "Название роли пользователей")]
-            public string Name { get; set; }
-
-            [Display(Name = "Описание роли пользователей")]
-            public string RoleName { get; set; }
-
-            [Display(Name = "Пользователи, имеющие эту роль")]
-            public string UsersNames { get; set; }
-
-            [Display(Name = "Количество пользователей у роли")]
-            public int UsersCount { get; set; }
-        }
-
-        /// <summary> Веб модель редактирования роли пользователей </summary>
-        public class RoleEditWebModel
-        {
-            [HiddenInput(DisplayValue = false)]
-            public string? Id { get; set; }
-
-            [Required(ErrorMessage = "Системное имя роли обязательна для роли пользователей")]
-            [StringLength(200, MinimumLength = 3, ErrorMessage = "Системное имя роли должно быть длинной от 3 до 200 символов")]
-            [Display(Name = "Название роли пользователей")]
-            public string Name { get; set; }
-
-            [Required(ErrorMessage = "Название обязательна для роли пользователей")]
-            [StringLength(200, MinimumLength = 3, ErrorMessage = "Название роли должно быть длинной от 3 до 200 символов")]
-            [Display(Name = "Описание роли пользователей")]
-            public string RoleName { get; set; }
-        }
-
-        /// <summary> Вебмодель просмотра пользователя </summary>
-        public class UserWebModel
-        {
-            public string Id { get; set; }
-            
-            [Display(Name = "Фамилия пользователя")]
-            public string SurName { get; set; }
-
-            [Display(Name = "Имя пользователя")]
-            public string FirstName { get; set; }
-
-            [Display(Name = "Отчество пользователя")]
-            public string Patronymic { get; set; }
-
-            [Display(Name = "Логин пользователя")]
-            public string UserName { get; set; }
-
-            [Display(Name = "Почта пользователя")]
-            public string Email { get; set; }
-
-            [Display(Name = "Возраст")]
-            public int Age { get; set; }
-
-            [Display(Name = "Дата рождения")]
-            public DateTime BirthDay { get; set; }
-
-            [Display(Name = "Отдел")]
-            public string Department { get; set; }
         }
 
         /// <summary> Веб модель регистрации </summary>
