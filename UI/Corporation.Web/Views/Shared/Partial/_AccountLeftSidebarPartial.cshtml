@@ -1,4 +1,4 @@
-﻿<div class="left-sidebar">
+﻿<div class="left-sidebar border-1 shadow rounded bg-light p-1">
     <h4 class="text-center text-white bg-success p-2">Управление профилем</h4>
     <div class="accordion accordion-flush" id="accordionInfo">
         <ul class="nav nav-pills flex-column">
@@ -7,9 +7,17 @@
                     Информация по профилю
                 </a>
             </li>
+            @if (User.IsInRole("admins"))
+            {
             <li class="nav-item">
-                <a asp-controller="Account" asp-action="RoleList" class="nav-link text-dark">
+                <a asp-controller="Role" asp-action="Index" class="nav-link text-dark">
                     Роли пользователей
+                </a>
+            </li>
+            }
+            <li class="nav-item">
+                <a asp-controller="User" asp-action="Index" class="nav-link text-dark">
+                    Пользователи
                 </a>
             </li>
         </ul>

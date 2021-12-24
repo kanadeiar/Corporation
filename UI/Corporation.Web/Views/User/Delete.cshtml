@@ -1,0 +1,86 @@
+﻿@model Corporation.Web.Controllers.UserController.UserWebModel
+@{
+    ViewBag.Title = "Удаление пользователя";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <partial name="Partial/_AccountLeftSidebarPartial" />
+        </div>
+        <div class="col-sm-9">
+            <h1>@ViewBag.Title</h1>
+            
+            <div class="border-1 shadow rounded bg-light p-2">
+
+                <h5 class="my-4">Вы действительно хотите удалить пользователя с фамилией, имененем и отчеством:  @Model.SurName @Model.FirstName @Model.Patronymic и логином: @Model.UserName?</h5>
+
+                @Html.HiddenFor(Model => Model.Id)
+                
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.SurName)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.SurName)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.FirstName)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Patronymic)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Patronymic)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.UserName)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.BirthDay)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.BirthDay)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Age)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Age)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Department)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Department)
+                    </dd>
+                </dl>
+
+                <div class="form-group my-2">
+                    @if (Model.UserName == "admin")
+                    {
+                        <div class="alert-warning p-2 my-4">
+                            <h5>Нельзя! Нельзя удалить администратора, это пользователь который должен обязательно оставаться в системе!</h5>
+                        </div>
+                    }
+                    <form asp-controller="User" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
+                        <input type="submit" value="Подтвердить удаление пользователя" class="btn btn-danger @((Model.UserName == "admin") ? "disabled" : "")"/>
+                        <a asp-controller="User" asp-action="Index" class="btn btn-secondary">Назад</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
