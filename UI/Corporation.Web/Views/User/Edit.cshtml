@@ -17,55 +17,93 @@
 
                     <input type="hidden" asp-for="Id" />
 
-                    <div class="form-group">
-                        <label asp-for="SurName" class="control-label"></label>
+                    <div class="my-2">
+                        <label asp-for="SurName" class="form-label"></label>
                         <input asp-for="SurName" class="form-control" placeholder="Введите фамилию" />
                         <span asp-validation-for="SurName" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="FirstName" class="control-label"></label>
+                    <div class="my-2">
+                        <label asp-for="FirstName" class="form-label"></label>
                         <input asp-for="FirstName" class="form-control" placeholder="Введите имя" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Patronymic" class="control-label"></label>
+                    <div class="my-2">
+                        <label asp-for="Patronymic" class="form-label"></label>
                         <input asp-for="Patronymic" class="form-control" placeholder="Введите отчество" />
                         <span asp-validation-for="Patronymic" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Email" class="control-label"></label>
+                    <div class="my-2">
+                        <label asp-for="Email" class="form-label"></label>
                         <input asp-for="Email" class="form-control" placeholder="Введите электронную почту пользователя" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     
-                    <div class="form-group">
-                        <label asp-for="Birthday" class="control-label"></label>
+                    <div class="my-2">
+                        <label asp-for="Birthday" class="form-label"></label>
                         <input asp-for="Birthday" type="date" class="form-control" placeholder="День рождения пользователя" />
                         <span asp-validation-for="Birthday" class="text-danger"></span>
                     </div>
                     
-                    <div class="form-group">
-                        <label asp-for="Department" class="control-label"></label>
+                    <div class="my-2">
+                        <label asp-for="Department" class="form-label"></label>
                         <input asp-for="Department" class="form-control" placeholder="Отдел пользователя" />
                         <span asp-validation-for="Department" class="text-danger"></span>
                     </div>
                     
-                    <div class="form-group">
-                        <label asp-for="UserName" class="control-label"></label>
+                    <div class="my-2">
+                        <p class="mb-0">Членство в ролях</p>
+                        <label asp-for="MembersRoles" class="form-label mb-0"></label>
+                        @if (Model.MembersRoles == null || !Model.MembersRoles.Any())
+                        {
+                            <div class="text-center p-1"><p>Отсутствуют</p></div>
+                        }
+                        else
+                        {
+                            <div>
+                                @foreach (var role in Model.MembersRoles)
+                                {
+                                    <a class="btn btn-sm btn-outline-success text-black" asp-controller="User" asp-action="SelectMemberRoles" asp-route-userid="@Model.Id" asp-route-rolename="@role">
+                                        @role
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </a>
+                                }
+                            </div>
+                        }
+                        <label asp-for="NonMembersRoles" class="form-label mb-0"></label>
+                        @if (Model.NonMembersRoles == null || !Model.NonMembersRoles.Any())
+                        {
+                            <div class="text-center p-1"><p>Отсутствуют</p></div>
+                        }
+                        else
+                        {
+                            <div>
+                                @foreach (var role in Model.NonMembersRoles)
+                                {
+                                    <a class="btn btn-sm btn-outline-warning text-black" asp-controller="User" asp-action="SelectMemberRoles" asp-route-userid="@Model.Id" asp-route-rolename="@role">
+                                        @role
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <div class="my-2">
+                        <label asp-for="UserName" class="form-label"></label>
                         <input asp-for="UserName" class="form-control" placeholder="Введите логин пользователя" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Password" class="control-label"></label>
+                    <div class="my-2">
+                        <label asp-for="Password" class="form-label"></label>
                         <input asp-for="Password" class="form-control" placeholder="Введите новый пароль для изменения пароля" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group my-2">
+                    <div class="my-2">
                         <button asp-action="Edit" class="btn btn-primary">Сохранить</button>
                         <a asp-controller="User" asp-action="Index" class="btn btn-secondary">Назад</a>
                     </div>

@@ -1,4 +1,7 @@
-﻿namespace Corporation.Web.Controllers;
+﻿using System.Globalization;
+using System.Linq;
+
+namespace Corporation.Web.Controllers;
 
 [Authorize]
 public class UserController : Controller
@@ -28,6 +31,7 @@ public class UserController : Controller
             BirthDay = u.Birthday,
             Age = DateTime.Today.Year - u.Birthday.Year,
             Department = u.Department,
+            RolesNames = string.Join(", ", _userManager.GetRolesAsync(u).Result),
         }).ToArrayAsync();
         return View(models);
     }
@@ -35,14 +39,22 @@ public class UserController : Controller
     /// <summary> Создание нового пользователя </summary>
     public IActionResult Create()
     {
-        return View("Edit");
+        return View("Edit", new UserEditWebModel
+        { 
+            NonMembersRoles = _roleManager.Roles.ToList()
+                .Select(r => r.Name)
+        });
     }
 
     /// <summary> Редактирование пользователя </summary>
     public async Task<IActionResult> Edit(string? id)
     {
         if (string.IsNullOrEmpty(id))
-            return View(new UserEditWebModel());
+            return View(new UserEditWebModel
+            {
+                NonMembersRoles = _roleManager.Roles.ToList()
+                    .Select(r => r.Name)
+            });
         if (await _userManager.FindByIdAsync(id) is { } user)
         {
             var model = new UserEditWebModel
@@ -55,6 +67,10 @@ public class UserController : Controller
                 Email = user.Email,
                 Birthday = user.Birthday,
                 Department = user.Department,
+                MembersRoles = _userManager.GetRolesAsync(user).Result,
+                NonMembersRoles = _roleManager.Roles.ToList()
+                    .Select(r => r.Name)
+                    .Except(_userManager.GetRolesAsync(user).Result),
             };
             return View(model);
         }
@@ -114,6 +130,36 @@ public class UserController : Controller
         return View(model);
     }
 
+    /// <summary> Редактирование роли у пользователя </summary>
+    /// <param name="userid">Ид пользователя</param>
+    /// <param name="rolename">Роль</param>
+    public async Task<IActionResult> SelectMemberRoles(string userid, string rolename)
+    {
+        var user = await _userManager.FindByIdAsync(userid);
+        IdentityResult result;
+        if (await _userManager.IsInRoleAsync(user, rolename))
+        {
+            if (rolename == "admins" && user.UserName == "admin")
+            {
+                return RedirectToAction("Edit", "User", new { id = userid });
+            }
+            result = await _userManager.RemoveFromRoleAsync(user, rolename);
+        }
+        else
+        {
+            result = await _userManager.AddToRoleAsync(user, rolename);
+        }
+        if (result.Succeeded)
+        {
+            return RedirectToAction("Edit", "User", new { id = userid });
+        }
+        foreach (var err in result.Errors)
+        {
+            ModelState.AddModelError("", err.Description);
+        }
+        return RedirectToAction("Edit", "User", new { id = userid });
+    }
+
     /// <summary> Удалить пользователя </summary>
     /// <param name="id">Идентификатор пользователя</param>
     public async Task<IActionResult> Delete(string id)
@@ -134,6 +180,7 @@ public class UserController : Controller
             BirthDay = u.Birthday,
             Age = DateTime.Today.Year - u.Birthday.Year,
             Department = u.Department,
+            RolesNames = string.Join(", ", _userManager.GetRolesAsync(u).Result),
         };
         return View(model);
     }
@@ -194,6 +241,9 @@ public class UserController : Controller
 
         [Display(Name = "Отдел")]
         public string Department { get; set; }
+
+        [Display(Name = "Роли у этого пользователя")]
+        public string RolesNames { get; set; }
     }
 
 
@@ -230,6 +280,11 @@ public class UserController : Controller
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Название отдела пользователя должно быть длинной от 3 до 200 символов")]
         [Display(Name = "Отдел пользователя")]
         public string Department { get; set; }
+
+        [Display(Name = "Роли, назначенные пользователю")]
+        public IEnumerable<string>? MembersRoles { get; set; }
+        [Display(Name = "Можно назначить роли")]
+        public IEnumerable<string>? NonMembersRoles { get; set; } 
 
         [Required(ErrorMessage = "Нужно обязательно ввести логин пользователя")]
         [Display(Name = "Логин пользователя")]

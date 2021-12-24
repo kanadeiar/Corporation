@@ -59,6 +59,7 @@ public static class CorporationSeedTestData
                 {
                     await userManager.AddToRoleAsync(adminUser, adminRole);
                     logger.LogInformation("Пользователь {1} успешно создан и наделен ролью {2}", adminUser.UserName, adminRole);
+                    await userManager.AddToRoleAsync(adminUser, userRole);
                 }
                 else
                 {

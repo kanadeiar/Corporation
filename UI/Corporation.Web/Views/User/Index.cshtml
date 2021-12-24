@@ -24,6 +24,7 @@
                         <th>Почта</th>
                         <th>Возраст</th>
                         <th>Отдел</th>
+                        <th>Роли</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -46,6 +47,7 @@
                                 <td>@user.Email</td>
                                 <td>@user.Age</td>
                                 <td>@user.Department</td>
+                                <td>@user.RolesNames</td>
                                 <td class="text-center">
                                     <a asp-controller="User" asp-action="Edit" asp-route-id="@user.Id"
                                        class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Редактировать</a>

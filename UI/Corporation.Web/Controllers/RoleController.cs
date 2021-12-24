@@ -27,7 +27,7 @@ public class RoleController : Controller
             string result = !users.Any()
                 ? "Нет пользователей"
                 : string.Join(", ", users.Take(3).Select(u => $"{u.SurName} {u.FirstName[0]}. {u.Patronymic[0]}.").ToArray());
-            item.UsersNames = users.Count() > 3 ? $"{result}, и др." : result;
+            item.UsersNames = users.Count() > 5 ? $"{result}, и др." : result;
             item.UsersCount = users.Count;
         };
         return View(models);
