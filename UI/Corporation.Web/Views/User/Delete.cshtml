@@ -70,7 +70,17 @@
                         @Html.DisplayNameFor(model => model.RolesNames)
                     </dt>
                     <dd class="col-sm-8">
-                        @Html.DisplayFor(model => model.RolesNames)
+                        @if (!Model.RolesNames.Any())
+                        {
+                            <span>Отсутствуют</span>
+                        }
+                        else
+                        {
+                            foreach (var r in Model.RolesNames)
+                            {
+                                <span>@r </span>
+                            }
+                        }
                     </dd>
                 </dl>
 

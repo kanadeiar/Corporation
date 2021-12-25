@@ -9,6 +9,7 @@ namespace Corporation.Domain.Identity
     /// <summary> Роль пользователя </summary>
     public class Role : IdentityRole
     {
+        /// <summary> Описание роли </summary>
         [Required(ErrorMessage = "Название обязательна для роли пользователей")]
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Название роли должно быть длинной от 3 до 200 символов")]
         public string RoleName { get; set; }

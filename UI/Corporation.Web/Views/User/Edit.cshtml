@@ -70,6 +70,14 @@
                                         <i class="fa fa-times" aria-hidden="true"></i>
                                     </a>
                                 }
+                                <div>
+                                    <span>Описания: (</span>
+                                        @foreach (var name in Model.MemberNamesRoles)
+                                        {
+                                            <span>@name</span>
+                                        }
+                                    <span>)</span>
+                                </div>
                             </div>
                         }
                         <label asp-for="NonMembersRoles" class="form-label mb-0"></label>
@@ -87,6 +95,14 @@
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                     </a>
                                 }
+                                <div>
+                                    <span>Описания: (</span>
+                                    @foreach (var name in Model.NonMemberNamesRoles)
+                                    {
+                                        <span>@name</span>
+                                    }
+                                    <span>)</span>
+                                </div>
                             </div>
                         }
                     </div>

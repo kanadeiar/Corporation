@@ -20,6 +20,7 @@ public class UserController : Controller
     public async Task<IActionResult> Index()
     {
         var users = _userManager.Users;
+        //var r = (_roleManager.Roles.First().RoleName);
         var models = await users.Select(u => new UserWebModel
         {
             Id = u.Id,
@@ -31,30 +32,40 @@ public class UserController : Controller
             BirthDay = u.Birthday,
             Age = DateTime.Today.Year - u.Birthday.Year,
             Department = u.Department,
-            RolesNames = string.Join(", ", _userManager.GetRolesAsync(u).Result),
+            RolesNames = _userManager.GetRolesAsync(u).Result,
         }).ToArrayAsync();
+        foreach (var m in models)
+        {
+            m.RolesNames = m.RolesNames.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
+        }
         return View(models);
     }
 
     /// <summary> Создание нового пользователя </summary>
     public IActionResult Create()
     {
-        return View("Edit", new UserEditWebModel
-        { 
+        var model = new UserEditWebModel
+        {
             NonMembersRoles = _roleManager.Roles.ToList()
                 .Select(r => r.Name)
-        });
+        };
+        model.NonMemberNamesRoles = model.NonMembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
+        return View("Edit", model);
     }
 
     /// <summary> Редактирование пользователя </summary>
     public async Task<IActionResult> Edit(string? id)
     {
         if (string.IsNullOrEmpty(id))
-            return View(new UserEditWebModel
+        {
+            var model = new UserEditWebModel
             {
                 NonMembersRoles = _roleManager.Roles.ToList()
                     .Select(r => r.Name)
-            });
+            };
+            model.NonMemberNamesRoles = model.NonMembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
+            return View(model);
+        }
         if (await _userManager.FindByIdAsync(id) is { } user)
         {
             var model = new UserEditWebModel
@@ -72,6 +83,8 @@ public class UserController : Controller
                     .Select(r => r.Name)
                     .Except(_userManager.GetRolesAsync(user).Result),
             };
+            model.MemberNamesRoles = model.MembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
+            model.NonMemberNamesRoles = model.NonMembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
             return View(model);
         }
         return NotFound();
@@ -180,8 +193,9 @@ public class UserController : Controller
             BirthDay = u.Birthday,
             Age = DateTime.Today.Year - u.Birthday.Year,
             Department = u.Department,
-            RolesNames = string.Join(", ", _userManager.GetRolesAsync(u).Result),
+            RolesNames = _userManager.GetRolesAsync(u).Result,
         };
+        model.RolesNames = model.RolesNames.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
         return View(model);
     }
 
@@ -243,7 +257,8 @@ public class UserController : Controller
         public string Department { get; set; }
 
         [Display(Name = "Роли у этого пользователя")]
-        public string RolesNames { get; set; }
+        //public string RolesNames { get; set; }
+        public IEnumerable<string> RolesNames { get; set; } = Enumerable.Empty<string>();
     }
 
 
@@ -283,8 +298,11 @@ public class UserController : Controller
 
         [Display(Name = "Роли, назначенные пользователю")]
         public IEnumerable<string>? MembersRoles { get; set; }
+        public IEnumerable<string>? MemberNamesRoles { get; set; }
+
         [Display(Name = "Можно назначить роли")]
-        public IEnumerable<string>? NonMembersRoles { get; set; } 
+        public IEnumerable<string>? NonMembersRoles { get; set; }
+        public IEnumerable<string>? NonMemberNamesRoles { get; set; }
 
         [Required(ErrorMessage = "Нужно обязательно ввести логин пользователя")]
         [Display(Name = "Логин пользователя")]

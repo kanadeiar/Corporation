@@ -47,7 +47,19 @@
                                 <td>@user.Email</td>
                                 <td>@user.Age</td>
                                 <td>@user.Department</td>
-                                <td>@user.RolesNames</td>
+                                <td>
+                                    @if (!user.RolesNames.Any())
+                                    {
+                                        <span>Отсутствуют</span>
+                                    }
+                                    else
+                                    {
+                                        foreach (var r in user.RolesNames)
+                                        {
+                                            <span>@r </span>
+                                        }
+                                    }
+                                </td>
                                 <td class="text-center">
                                     <a asp-controller="User" asp-action="Edit" asp-route-id="@user.Id"
                                        class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Редактировать</a>
