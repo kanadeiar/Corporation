@@ -14,3 +14,4 @@ global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 global using Corporation.Domain.Entites;
 global using Corporation.Domain.Identity;
+global using Corporation.Domain.Entites.Structures;

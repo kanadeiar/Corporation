@@ -86,6 +86,33 @@ public static class CorporationSeedTestData
                 }
             }
 
+            var corp1 = new Corp { Name = "Корпорация" };
+            context.Corps.AddRange( corp1 );
+            await context.SaveChangesAsync();
+
+            var com1 = new Company { Name = "Завод 1", Corp = corp1 };
+            context.Companies.AddRange( com1 );
+            await context.SaveChangesAsync();
+
+            var depC1W1 = new Department { Name = "Склад сырья 1", Company = com1 };
+            var depC1P1 = new Department { Name = "Цех производства 1", Company = com1 };
+            var depC1W2 = new Department { Name = "Склад продукции 1", Company = com1 };
+            var depC1L1 = new Department { Name = "Лаборатория 1", Company = com1 };
+            var depC1O1 = new Department { Name = "Офис 1", Company = com1 };
+            context.Departments.AddRange( depC1W1, depC1P1, depC1W2 );
+            await context.SaveChangesAsync();
+
+            var workC1W1 = new Workstation { Name = "Управление складом сырья 1", Department = depC1W1 };
+            var workC1P1 = new Workstation { Name = "Пресс кирпича 1", Department = depC1P1 };
+            var workC1P2 = new Workstation { Name = "Упаковка кирпича 1", Department = depC1P1 };
+            var workC1W2 = new Workstation { Name = "Управление складом продукции 1", Department = depC1W2 };
+            var workC1L1 = new Workstation { Name = "Рабочее место лаборанта 1", Department = depC1L1 };
+            var workC1O1 = new Workstation { Name = "Рабочее место офисного рабоника 1", Department = depC1O1 };
+            context.Workstations.AddRange( workC1W1, workC1P1, workC1P2, workC1W2, workC1L1, workC1O1 );
+            await context.SaveChangesAsync();
+
+
+
             var pt1 = new ProductType { Name = "Кирпич полуторный 250x120x65", Number = 1, Units = 360, Volume = 1.1, Weight = 500.0, Price = 5000.0M };
             var pt2 = new ProductType { Name = "Кирпич пустотелый 250x120x65", Number = 2, Units = 360, Volume = 1.1, Weight = 550.0, Price = 6000.0M };
             var pt3 = new ProductType { Name = "Кирпич полнотелый 250x120x88", Number = 3, Units = 280, Volume = 1.2, Weight = 490.0, Price = 5500.0M };
