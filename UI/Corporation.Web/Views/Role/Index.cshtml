@@ -12,7 +12,9 @@
             <h1>@ViewBag.Title</h1>
             <div class="table-responsive border-1 shadow rounded bg-light p-2">
                 <div class="my-2">
-                    <a asp-controller="Role" asp-action="Create" class="btn btn-success">Создать новую роль пользователей</a>
+                    <a asp-controller="Role" asp-action="Create" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Создать новую роль для пользователей">
+                        Создать
+                    </a>
                 </div>
                 <table class="table my-2 table-bordered table-striped">
                     <thead>
@@ -20,6 +22,7 @@
                             <th>Название</th>
                             <th>Описание</th>
                             <th>Пользователи</th>
+                            <th>Отдел</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -38,10 +41,11 @@
                                 <td>@role.Name</td>
                                 <td>@role.RoleName</td>
                                 <td>@role.UsersCount шт.: @role.UsersNames</td>
+                                <td>@role.DepartmentName</td>
                                 <td class="text-center">
-                                    <a asp-controller="Role" asp-action="Edit" asp-route-id="@role.Id"
-                                       class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Редактировать</a>
-                                    <a asp-controller="Role" asp-action="Delete" asp-route-id="@role.Id"
+                                    <a asp-controller="Role" asp-action="Edit" asp-route-id="@role.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Редактировать роль"
+                                       class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+                                    <a asp-controller="Role" asp-action="Delete" asp-route-id="@role.Id" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Удалить роль"
                                        class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>

@@ -26,21 +26,23 @@ public static class CorporationSeedTestData
             }
 
             logger.LogInformation("Begin writing test data to database CorporationContext ...");
-            
+
             var corp1 = new Corp { Name = "Корпорация" };
-            context.Corps.AddRange( corp1 );
+            context.Corps.AddRange(corp1);
             await context.SaveChangesAsync();
 
+            var com0 = new Company { Name = "Администрация", Corp = corp1 };
             var com1 = new Company { Name = "Завод 1", Corp = corp1 };
-            context.Companies.AddRange( com1 );
+            context.Companies.AddRange(com0, com1);
             await context.SaveChangesAsync();
 
+            var depC0O1 = new Department { Name = "Главный офис 1", Company = com0 };
             var depC1W1 = new Department { Name = "Склад сырья 1", Company = com1 };
             var depC1P1 = new Department { Name = "Цех производства 1", Company = com1 };
             var depC1W2 = new Department { Name = "Склад продукции 1", Company = com1 };
             var depC1L1 = new Department { Name = "Лаборатория 1", Company = com1 };
             var depC1O1 = new Department { Name = "Офис 1", Company = com1 };
-            context.Departments.AddRange( depC1W1, depC1P1, depC1W2 );
+            context.Departments.AddRange(depC0O1, depC1W1, depC1P1, depC1W2, depC1L1, depC1O1);
             await context.SaveChangesAsync();
 
             var workMasterC1 = new Workstation { Name = "Рабочее место мастера 1", Department = depC1P1 };
@@ -50,7 +52,7 @@ public static class CorporationSeedTestData
             var workC1W2 = new Workstation { Name = "Управление складом продукции 1", Department = depC1W2 };
             var workC1L1 = new Workstation { Name = "Рабочее место лаборанта 1", Department = depC1L1 };
             var workC1O1 = new Workstation { Name = "Рабочее место офисного рабоника 1", Department = depC1O1 };
-            context.Workstations.AddRange(workMasterC1, workC1W1, workC1P1, workC1P2, workC1W2, workC1L1, workC1O1 );
+            context.Workstations.AddRange(workMasterC1, workC1W1, workC1P1, workC1P2, workC1W2, workC1L1, workC1O1);
             await context.SaveChangesAsync();
 
             var pt1 = new ProductType { Name = "Кирпич полуторный 250x120x65", Number = 1, Units = 360, Volume = 1.1, Weight = 500.0, Price = 5000.0M };
@@ -78,15 +80,15 @@ public static class CorporationSeedTestData
             {
                 if (await roleManager.FindByNameAsync(adminRole) is null)
                 {
-                    await roleManager.CreateAsync(new Role { Name = adminRole, RoleName = "Администраторы" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.UserRole, RoleName = "Пользователи" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.MasterWorkC1P1, RoleName = "Мастера производства 1" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1W1, RoleName = "Кладовщики склада сырья 1" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1P1, RoleName = "Операторы кирпичного пресса 1" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1P2, RoleName = "Операторы кирпичной упаковки 1" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1W2, RoleName = "Кладовщики склада продукции 1" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1L1, RoleName = "Лаборанты лаборатории 1" });
-                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1O1, RoleName = "Офисные работники офиса 1" });
+                    await roleManager.CreateAsync(new Role { Name = adminRole, RoleName = "Администраторы", DepartmentId = depC0O1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.UserRole, RoleName = "Пользователи", DepartmentId = depC0O1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.MasterWorkC1P1, RoleName = "Мастера производства 1", DepartmentId = depC1P1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1W1, RoleName = "Кладовщики склада сырья 1", DepartmentId = depC1W1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1P1, RoleName = "Операторы кирпичного пресса 1", DepartmentId = depC1P1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1P2, RoleName = "Операторы кирпичной упаковки 1", DepartmentId = depC1P1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1W2, RoleName = "Кладовщики склада продукции 1", DepartmentId = depC1W1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1L1, RoleName = "Лаборанты лаборатории 1", DepartmentId = depC1L1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1O1, RoleName = "Офисные работники офиса 1", DepartmentId = depC1O1.Id });
                 }
                 var adminUser = new User
                 {
@@ -96,7 +98,7 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-18),
                     UserName = adminUsername,
                     Email = adminEmail,
-                    Department = "Отдел 1",
+                    CompanyId = com0.Id,
                 };
                 var result = await userManager.CreateAsync(adminUser, adminPassword);
                 if (result.Succeeded)
@@ -120,7 +122,7 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-20),
                     UserName = "user",
                     Email = "user@example.com",
-                    Department = "Отдел 1",
+                    CompanyId = com1.Id,
                 };
                 result = await userManager.CreateAsync(user, "123");
                 if (result.Succeeded)
@@ -136,9 +138,9 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-30),
                     UserName = "masterov",
                     Email = "masterov@example.com",
-                    Department = "Рабочее место мастера 1",
+                    CompanyId = com1.Id,
                 };
-                result = await userManager.CreateAsync(masterC1P1, "123");
+                result = await userManager.CreateAsync(masterC1P1, "123456");
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(masterC1P1, Inits.MasterWorkC1P1);
@@ -151,7 +153,7 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-22),
                     UserName = "loginov",
                     Email = "loginov@example.com",
-                    Department = "Управление складом сырья 1",
+                    CompanyId = com1.Id,
                 };
                 result = await userManager.CreateAsync(operatorC1W1, "123");
                 if (result.Succeeded)
@@ -166,7 +168,7 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-23),
                     UserName = "petrov",
                     Email = "petrov@example.com",
-                    Department = "Пресс кирпича 1",
+                    CompanyId = com1.Id,
                 };
                 result = await userManager.CreateAsync(operatorC1P1, "123");
                 if (result.Succeeded)
@@ -181,12 +183,12 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-24),
                     UserName = "vasin",
                     Email = "vasin@example.com",
-                    Department = "Упаковка кирпича 1",
+                    CompanyId = com1.Id,
                 };
                 result = await userManager.CreateAsync(operatorC1P2, "123");
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(operatorC1P2, Inits.OperatorWorkC1P1);
+                    await userManager.AddToRoleAsync(operatorC1P2, Inits.OperatorWorkC1P2);
                 }
                 var operatorC1W2 = new User
                 {
@@ -196,7 +198,7 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-25),
                     UserName = "sidorov",
                     Email = "sidorov@example.com",
-                    Department = "Управление складом продукции 1",
+                    CompanyId = com1.Id,
                 };
                 result = await userManager.CreateAsync(operatorC1W2, "123");
                 if (result.Succeeded)
@@ -211,7 +213,7 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-17),
                     UserName = "popov",
                     Email = "popov@example.com",
-                    Department = "Рабочее место лаборанта 1",
+                    CompanyId = com1.Id,
                 };
                 result = await userManager.CreateAsync(operatorC1L1, "123");
                 if (result.Succeeded)
@@ -226,7 +228,7 @@ public static class CorporationSeedTestData
                     Birthday = DateTime.Today.AddYears(-18),
                     UserName = "alexeev",
                     Email = "alexeev@example.com",
-                    Department = "Рабочее место офисного рабоника 1",
+                    CompanyId = com1.Id,
                 };
                 result = await userManager.CreateAsync(operatorC1O1, "123");
                 if (result.Succeeded)

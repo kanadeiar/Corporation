@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Corporation.Web.Controllers;
 
@@ -9,11 +10,13 @@ public class UserController : Controller
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
     private readonly SignInManager<User> _signInManager;
-    public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+    private readonly CorporationContext _Context;
+    public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, CorporationContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _signInManager = signInManager;
+        _Context = context;
     }
 
     /// <summary> Пользователи </summary>
@@ -21,7 +24,7 @@ public class UserController : Controller
     {
         var users = _userManager.Users;
         //var r = (_roleManager.Roles.First().RoleName);
-        var models = await users.Select(u => new UserWebModel
+        var models = await users.Include(u => u.Company).Select(u => new UserWebModel
         {
             Id = u.Id,
             SurName = u.SurName,
@@ -31,7 +34,7 @@ public class UserController : Controller
             Email = u.Email,
             BirthDay = u.Birthday,
             Age = DateTime.Today.Year - u.Birthday.Year,
-            Department = u.Department,
+            CompanyName = u.Company.Name,
             RolesNames = _userManager.GetRolesAsync(u).Result,
         }).ToArrayAsync();
         foreach (var m in models)
@@ -42,7 +45,7 @@ public class UserController : Controller
     }
 
     /// <summary> Создание нового пользователя </summary>
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
         var model = new UserEditWebModel
         {
@@ -50,6 +53,7 @@ public class UserController : Controller
                 .Select(r => r.Name)
         };
         model.NonMemberNamesRoles = model.NonMembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
+        ViewBag.Companies = new SelectList(await _Context.Companies.ToListAsync(), "Id", "Name");
         return View("Edit", model);
     }
 
@@ -64,6 +68,7 @@ public class UserController : Controller
                     .Select(r => r.Name)
             };
             model.NonMemberNamesRoles = model.NonMembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
+            ViewBag.Companies = new SelectList(await _Context.Companies.ToListAsync(), "Id", "Name");
             return View(model);
         }
         if (await _userManager.FindByIdAsync(id) is { } user)
@@ -77,7 +82,7 @@ public class UserController : Controller
                 UserName = user.UserName,
                 Email = user.Email,
                 Birthday = user.Birthday,
-                Department = user.Department,
+                CompanyId = user.CompanyId,
                 MembersRoles = _userManager.GetRolesAsync(user).Result,
                 NonMembersRoles = _roleManager.Roles.ToList()
                     .Select(r => r.Name)
@@ -85,6 +90,7 @@ public class UserController : Controller
             };
             model.MemberNamesRoles = model.MembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
             model.NonMemberNamesRoles = model.NonMembersRoles.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
+            ViewBag.Companies = new SelectList(await _Context.Companies.ToListAsync(), "Id", "Name");
             return View(model);
         }
         return NotFound();
@@ -116,7 +122,7 @@ public class UserController : Controller
                 UserName = model.UserName,
                 Email = model.Email,
                 Birthday = model.Birthday,
-                Department = model.Department,
+                CompanyId = model.CompanyId,
             };
             result = await _userManager.CreateAsync(newUser, model.Password);
         }
@@ -128,7 +134,7 @@ public class UserController : Controller
             user.UserName = model.UserName;
             user.Email = model.Email;
             user.Birthday = model.Birthday;
-            user.Department = model.Department;
+            user.CompanyId = model.CompanyId;
             result = await _userManager.UpdateAsync(user);
             if (result.Succeeded && !string.IsNullOrEmpty(model.Password))
             {
@@ -192,7 +198,7 @@ public class UserController : Controller
             Email = u.Email,
             BirthDay = u.Birthday,
             Age = DateTime.Today.Year - u.Birthday.Year,
-            Department = u.Department,
+            CompanyName = u.Company.Name,
             RolesNames = _userManager.GetRolesAsync(u).Result,
         };
         model.RolesNames = model.RolesNames.Select(r => _roleManager.Roles.First(rr => rr.Name == r).RoleName);
@@ -253,8 +259,8 @@ public class UserController : Controller
         [Display(Name = "Возраст")]
         public int Age { get; set; }
 
-        [Display(Name = "Отдел")]
-        public string Department { get; set; }
+        [Display(Name = "Компания")]
+        public string CompanyName { get; set; }
 
         [Display(Name = "Роли у этого пользователя")]
         //public string RolesNames { get; set; }
@@ -291,10 +297,11 @@ public class UserController : Controller
         [Display(Name = "День рождения пользователя")]
         public DateTime Birthday { get; set; } = DateTime.Today.AddYears(-18);
 
-        [Required(ErrorMessage = "Название отдела пользователя обязательно")]
-        [StringLength(200, MinimumLength = 3, ErrorMessage = "Название отдела пользователя должно быть длинной от 3 до 200 символов")]
-        [Display(Name = "Отдел пользователя")]
-        public string Department { get; set; }
+        /// <summary> Компания </summary>
+        [Required(ErrorMessage = "Компания обязательня для роли пользователей")]
+        [Range(1, int.MaxValue, ErrorMessage = "Должна быть выбрана компания")]
+        [Display(Name = "Компания")]
+        public int CompanyId { get; set; }
 
         [Display(Name = "Роли, назначенные пользователю")]
         public IEnumerable<string>? MembersRoles { get; set; }

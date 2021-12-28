@@ -1,4 +1,6 @@
-﻿namespace Corporation.Web.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Corporation.Web.Controllers;
 
 [Authorize]
 public class AccountController : Controller
@@ -6,11 +8,14 @@ public class AccountController : Controller
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
     private readonly SignInManager<User> _signInManager;
-    public AccountController(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+    private readonly CorporationContext _Context;
+
+    public AccountController(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, CorporationContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _signInManager = signInManager;
+        _Context = context;
     }
 
     [AllowAnonymous]
@@ -21,6 +26,7 @@ public class AccountController : Controller
         if (User.Identity.IsAuthenticated)
         {
             model.User = await _userManager.FindByNameAsync(User.Identity.Name);
+            model.User.Company = await _Context.Companies.FirstOrDefaultAsync(c => c.Id == model.User.CompanyId);
             var roles = await _userManager.GetRolesAsync(model.User);
             model.UserRoleNames = _roleManager.Roles.Where(r => roles.Contains(r.Name)).Select(r => r.RoleName);
         }
@@ -30,17 +36,25 @@ public class AccountController : Controller
     #region Регистрация пользователя
 
     [AllowAnonymous]
-    public IActionResult Register() => View(new RegisterWebModel());
+    public async Task<IActionResult> Register()
+    {
+        ViewBag.Companies = new SelectList(await _Context.Companies.ToListAsync(), "Id", "Name");
+        return View(new RegisterWebModel());
+    }
 
     [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
     public async Task<IActionResult> Register(RegisterWebModel model)
     {
         if (!ModelState.IsValid)
+        {
+            ViewBag.Companies = new SelectList(await _Context.Companies.ToListAsync(), "Id", "Name");
             return View(model);
+        }
         var user = new User
         {
             UserName = model.UserName,
             Email = model.Email,
+            CompanyId = model.CompanyId,
         };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
@@ -55,6 +69,7 @@ public class AccountController : Controller
         {
             ModelState.AddModelError("", error);
         }
+        ViewBag.Companies = new SelectList(await _Context.Companies.ToListAsync(), "Id", "Name");
         return View(model);
     }
 
@@ -150,10 +165,11 @@ public class AccountController : Controller
         [Display(Name = "День рождения пользователя")]
         public DateTime Birthday { get; set; } = DateTime.Today.AddYears(-18);
 
+        /// <summary> Компания пользователя </summary>
         [Required(ErrorMessage = "Название отдела пользователя обязательно")]
-        [StringLength(200, MinimumLength = 3, ErrorMessage = "Название отдела пользователя должно быть длинной от 3 до 200 символов")]
-        [Display(Name = "Отдел пользователя")]
-        public string Department { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Должна быть выбрана компания")]
+        [Display(Name = "Компания пользователя")]
+        public int CompanyId { get; set; }
 
         [Required(ErrorMessage = "Нужно обязательно ввести логин пользователя")]
         [Display(Name = "Логин пользователя")]

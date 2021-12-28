@@ -1,25 +1,31 @@
-﻿namespace Corporation.Web.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Corporation.Web.Controllers;
 
 [Authorize(Roles = "admins")]
 public class RoleController : Controller
 {
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
-    public RoleController(UserManager<User> userManager, RoleManager<Role> roleManager)
+    private readonly CorporationContext _Context;
+
+    public RoleController(UserManager<User> userManager, RoleManager<Role> roleManager, CorporationContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _Context = context;
     }
 
     /// <summary> Роли пользователя </summary>
     public async Task<IActionResult> Index()
     {
         var roles = _roleManager.Roles;
-        var models = await roles.Select(r => new RoleWebModel
+        var models = await roles.Include(r => r.Department).Select(r => new RoleWebModel
         {
             Id = r.Id,
             Name = r.Name,
             RoleName = r.RoleName,
+            DepartmentName = r.Department.Name,
         }).ToListAsync();
         foreach (var item in models)
         {
@@ -34,8 +40,9 @@ public class RoleController : Controller
     }
 
     /// <summary> Создание новой роли </summary>
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        ViewBag.Departments = new SelectList(await _Context.Departments.ToListAsync(), "Id", "Name");
         return View("Edit", new RoleEditWebModel());
     }
 
@@ -43,7 +50,10 @@ public class RoleController : Controller
     public async Task<IActionResult> Edit(string? id)
     {
         if (string.IsNullOrEmpty(id))
+        {
+            ViewBag.Departments = new SelectList(await _Context.Departments.ToListAsync(), "Id", "Name");
             return View(new RoleEditWebModel());
+        }
         if (await _roleManager.FindByIdAsync(id) is { } role)
         {
             var model = new RoleEditWebModel
@@ -51,7 +61,9 @@ public class RoleController : Controller
                 Id = role.Id,
                 Name = role.Name,
                 RoleName = role.RoleName,
+                DepartmentId = role.DepartmentId,
             };
+            ViewBag.Departments = new SelectList(await _Context.Departments.ToListAsync(), "Id", "Name");
             return View(model);
         }
         return NotFound();
@@ -74,6 +86,7 @@ public class RoleController : Controller
             {
                 Name = model.Name,
                 RoleName = model.RoleName,
+                DepartmentId = model.DepartmentId,
             };
             result = await _roleManager.CreateAsync(newRole);
         }
@@ -81,6 +94,7 @@ public class RoleController : Controller
         {
             role.Name = model.Name;
             role.RoleName = model.RoleName;
+            role.DepartmentId = model.DepartmentId;
             result = await _roleManager.UpdateAsync(role);
         }
         if (result.Succeeded)
@@ -105,6 +119,7 @@ public class RoleController : Controller
             Id = r.Id,
             Name = r.Name,
             RoleName = r.RoleName,
+            DepartmentName = r.Department.Name,
         };
         var users = await _userManager.GetUsersInRoleAsync(r.Name);
         string result = !users.Any()
@@ -160,6 +175,9 @@ public class RoleController : Controller
 
         [Display(Name = "Количество пользователей у роли")]
         public int UsersCount { get; set; }
+
+        [Display(Name = "Название отдела роли пользователей")]
+        public string DepartmentName { get; set; }
     }
 
     /// <summary> Веб модель редактирования роли пользователей </summary>
@@ -178,6 +196,11 @@ public class RoleController : Controller
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Название роли должно быть длинной от 3 до 200 символов")]
         [Display(Name = "Описание роли пользователей")]
         public string RoleName { get; set; }
+
+        /// <summary> Отдел </summary>
+        [Required(ErrorMessage = "Отдел обязателен для роли пользователей")]
+        [Range(1, int.MaxValue, ErrorMessage = "Должен быть выбран отдел")]
+        public int DepartmentId { get; set; }
     }
 
     #endregion

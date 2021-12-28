@@ -17,20 +17,28 @@
 
                     <input type="hidden" asp-for="Id" />
 
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
+                    <div>
+                        <label asp-for="Name" class="form-label"></label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="RoleName" class="control-label"></label>
+                    <div>
+                        <label asp-for="RoleName" class="form-label"></label>
                         <input asp-for="RoleName" class="form-control" />
                         <span asp-validation-for="RoleName" class="text-danger"></span>
                     </div>
+                    
+                    <div>
+                        <label asp-for="DepartmentId" class="form-label"></label>
+                        <select asp-for="DepartmentId" asp-items="ViewBag.Departments" class="form-control"></select>
+                        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                    </div>
 
                     <div class="form-group my-2">
-                        <button asp-action="Edit" class="btn btn-primary">Сохранить</button>
+                        <button asp-action="Edit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Сохранить изменения в данных роли пользователей">
+                            Сохранить
+                        </button>
                         <a asp-controller="Role" asp-action="Index" class="btn btn-secondary">Назад</a>
                     </div>
                 </form>
