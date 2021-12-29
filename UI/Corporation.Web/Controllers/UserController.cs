@@ -222,11 +222,11 @@ public class UserController : Controller
     #region WebAPI
 
     [AllowAnonymous]
-    public async Task<IActionResult> IsNameFree(string UserName)
+    public async Task<IActionResult> IsNameFree(string UserName, string Id)
     {
-        await Task.Delay(1000);
         var user = await _userManager.FindByNameAsync(UserName);
-        return Json(user is null ? "true" : "Пользователь с таким имененем уже существует");
+        var result = (user is null || (user is { } u && u.Id == Id)) ? "true" : "Пользователь с таким имененем уже существует";
+        return Json(result);
     }
 
     #endregion
@@ -313,7 +313,7 @@ public class UserController : Controller
 
         [Required(ErrorMessage = "Нужно обязательно ввести логин пользователя")]
         [Display(Name = "Логин пользователя")]
-        [Remote("IsNameFree", "Account")]
+        [Remote("IsNameFree", "User", AdditionalFields = "Id")]
         public string UserName { get; set; }
 
         [Display(Name = "Новый пароль пользователя")]

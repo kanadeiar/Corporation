@@ -148,11 +148,11 @@ public class RoleController : Controller
     #region WebAPI
 
     [AllowAnonymous]
-    public async Task<IActionResult> IsNameFree(string Name)
+    public async Task<IActionResult> IsNameFree(string Name, string Id)
     {
-        await Task.Delay(1000);
         var role = await _roleManager.FindByNameAsync(Name);
-        return Json(role is null ? "true" : "Роль пользователей с таким именем уже существует");
+        var result = (role is null || (role is {} r && r.Id == Id)) ? "true" : "Роль пользователей с таким именем уже существует";
+        return Json(result);
     }
 
     #endregion
@@ -189,7 +189,7 @@ public class RoleController : Controller
         [Required(ErrorMessage = "Системное имя роли обязательна для роли пользователей")]
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Системное имя роли должно быть длинной от 3 до 200 символов")]
         [Display(Name = "Название роли пользователей")]
-        [Remote("IsNameFree", "Role")]
+        [Remote("IsNameFree", "Role", AdditionalFields = "Id")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Название обязательна для роли пользователей")]
