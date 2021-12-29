@@ -1,13 +1,47 @@
 @page "/online"
+@inherits OwningComponentBase<CorporationContext>
 
 <PageTitle>Главная</PageTitle>
 
-<div class="border-1 shadow rounded bg-light p-1">
+<div class="row">
+    <div class="col-md-3 col-lg-2 mb-2">
+        <nav class="flex-column">
+            <_LeftSidebarPartial />
+        </nav>
+    </div>
+    <div class="col-md-7 col-lg-10">
+        <div class="border-1 shadow rounded bg-light p-1">
 
-    <h1 class="my-2 p-2 bg-dark text-white">Приветствие.</h1>
+            <h1 class="my-2 p-2 bg-dark text-white">Корпорация</h1>
 
-    <p>Корпоративное приложение.</p>
+            <p>Информация по корпорации.</p>
+    
+            <h6>Завод 1</h6>
+            <p>Содержимое склада сырья:
+                @if (Com1Warehouse1 is null)
+                {
+                    <apsn>Данные отсутствуют</apsn>
+                }
+                else
+                {
+                    <span><strong>@Com1Warehouse1.Com1Tank1LooseRaw.Name : @Com1Warehouse1.Com1Tank1LooseRawValue м3, @Com1Warehouse1.Com1Tank2LooseRaw.Name : @Com1Warehouse1.Com1Tank2LooseRawValue м3</strong></span>
+                }
+            </p>
 
+        </div>
+    </div>
 </div>
 
 
+@code {
+    CorporationContext _Context => Service;
+    public Com1Warehouse1ShiftData? Com1Warehouse1 { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Com1Warehouse1 = await _Context.Com1Warehouse1ShiftDatas
+            .Include(i => i.Com1Tank1LooseRaw)
+            .Include(i => i.Com1Tank2LooseRaw)
+            .OrderByDescending(i => i.Time).FirstOrDefaultAsync();
+    }
+}

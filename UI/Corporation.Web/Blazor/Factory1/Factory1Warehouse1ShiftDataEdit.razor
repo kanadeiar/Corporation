@@ -1,0 +1,159 @@
+﻿@page "/factory1/warehouse1/edit/{id:int}"
+@page "/factory1/warehouse1/create"
+@inherits OwningComponentBase<CorporationContext>
+@inject NavigationManager NavManager
+
+<PageTitle>@Mode - Завод 1</PageTitle>
+
+<link href="/css/BlazorValidation.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-3 col-lg-2 mb-2">
+        <nav class="flex-column">
+            <_Factory1LeftSidebarPartial />
+        </nav>
+    </div>
+    <div class="col-md-7 col-lg-10 mb-2">
+        <div class="border-1 shadow rounded bg-light p-1">
+
+            <h1 class="my-2 p-2 bg-@Theme text-@TextColor">@Mode</h1>
+
+            <div>
+                <NavLink class="btn btn-secondary" href="factory1/warehouse1">Назад</NavLink>
+            </div>
+            
+            @if (Com1Warehouse1ShiftData is null)
+            {
+                <div class="row">
+                    <div class="p-5 text-center">Загрузка ...</div>
+                </div>
+            }
+            else
+            {
+                <EditForm Model="Com1Warehouse1ShiftData" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    @if (!IsModeCreate)
+                    {
+                        <div>
+                            <label>ID</label>
+                            <InputNumber class="form-control" @bind-Value="Com1Warehouse1ShiftData.Id" disabled />
+                        </div>
+                    }
+                    <div>
+                        <label>Дата заливки</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Time)" />
+                        <InputDate class="form-control" @bind-Value="Com1Warehouse1ShiftData.Time" />
+                    </div>
+                    <div>
+                        <label>Время заливки</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Time)" />
+                        <input type="time" class="form-control" @bind="Com1Warehouse1ShiftData.Time" />
+                    </div>
+                    <div>
+                        <label>Смена</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Com1ShiftId)" />
+                        <InputSelect class="form-select" @bind-Value="Com1Warehouse1ShiftData.Com1ShiftId">
+                            <option selected value="0" disabled="disabled">Выберите смену</option>
+                            @foreach (var item in Com1Shifts.Keys)
+                            {
+                                <option value="@item">@Com1Shifts[item]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label>Кладовщик</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.UserId)" />
+                        <InputSelect class="form-select" @bind-Value="Com1Warehouse1ShiftData.UserId">
+                            <option selected value="null" disabled="disabled">Выберите кладовщика</option>
+                            @foreach (var item in Users.Keys)
+                            {
+                                <option value="@item">@Users[item]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label>Cырье в баке 1</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Com1Tank1LooseRawId)" />
+                        <InputSelect class="form-select" @bind-Value="Com1Warehouse1ShiftData.Com1Tank1LooseRawId">
+                            <option selected value="0" disabled="disabled">Выберите сырье в баке 1</option>
+                            @foreach (var item in Com1LooseRaws.Keys)
+                            {
+                                <option value="@item">@Com1LooseRaws[item]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label>Объем сырья в баке 1</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Com1Tank1LooseRawValue)" />
+                        <InputNumber class="form-control" @bind-Value="Com1Warehouse1ShiftData.Com1Tank1LooseRawValue" />
+                    </div>
+                    <div>
+                        <label>Cырье в баке 2</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Com1Tank2LooseRawId)" />
+                        <InputSelect class="form-select" @bind-Value="Com1Warehouse1ShiftData.Com1Tank2LooseRawId">
+                            <option selected value="0" disabled="disabled">Выберите сырье в баке 2</option>
+                            @foreach (var item in Com1LooseRaws.Keys)
+                            {
+                                <option value="@item">@Com1LooseRaws[item]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label>Объем сырья в баке 2</label>
+                        <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Com1Tank2LooseRawValue)" />
+                        <InputNumber class="form-control" @bind-Value="Com1Warehouse1ShiftData.Com1Tank2LooseRawValue" />
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-@Theme">Сохранить</button>
+                    </div>
+                </EditForm>
+            }
+
+        </div>
+    </div>
+</div>
+
+@code {
+    CorporationContext _Context => Service;
+    [Parameter]
+    public int Id { get; set; }
+    public bool IsModeCreate => Id == 0;
+
+    public Com1Warehouse1ShiftData? Com1Warehouse1ShiftData { get; set; }
+    public IDictionary<int, string> Com1Shifts { get; set; } = new Dictionary<int, string>();
+    public IDictionary<string, string> Users { get; set; } = new Dictionary<string, string>();
+    public IDictionary<int, string> Com1LooseRaws { get; set; } = new Dictionary<int, string>();
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsModeCreate)
+        {
+            Com1Warehouse1ShiftData = new Com1Warehouse1ShiftData();
+            Com1Warehouse1ShiftData.Time = DateTime.Now.AddSeconds(- DateTime.Now.Second);
+        }
+        else
+            Com1Warehouse1ShiftData = await _Context.Com1Warehouse1ShiftDatas.FindAsync(Id);
+        Com1Shifts = await _Context.Com1Shifts.ToDictionaryAsync(s => s.Id, s => s.Name);
+        Users = await _Context.Users
+            .Where(u => u.Company.Name == Inits.Company1Name)
+            .ToDictionaryAsync(u => u.Id, u => $"{u.SurName} {u.FirstName} {u.Patronymic}");
+        Com1LooseRaws = await _Context.Com1LooseRaws.ToDictionaryAsync(l => l.Id, l => l.Name);
+
+    }
+
+    public async Task HandleValidSubmit()
+    {
+        if (IsModeCreate)
+        {
+            _Context.Add(Com1Warehouse1ShiftData!);
+        }
+        await _Context.SaveChangesAsync();
+        NavManager.NavigateTo("factory1/warehouse1");
+    }
+
+    public string Mode => IsModeCreate ? "Добавление данных за смену" : "Редактирование данных за смену";
+    public string Theme => IsModeCreate ? "success" : "info";
+    public string TextColor => IsModeCreate ? "white" : "dark";
+}

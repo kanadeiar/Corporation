@@ -1,4 +1,6 @@
-﻿namespace Corporation.Dal.Data;
+﻿using Corporation.Domain.Company1;
+
+namespace Corporation.Dal.Data;
 
 public static class CorporationSeedTestData
 {
@@ -27,12 +29,12 @@ public static class CorporationSeedTestData
 
             logger.LogInformation("Begin writing test data to database CorporationContext ...");
 
-            var corp1 = new Corp { Name = "Корпорация" };
+            var corp1 = new Corp { Name = Inits.CopropationName };
             context.Corps.AddRange(corp1);
             await context.SaveChangesAsync();
 
-            var com0 = new Company { Name = "Администрация", Corp = corp1 };
-            var com1 = new Company { Name = "Завод 1", Corp = corp1 };
+            var com0 = new Company { Name = Inits.Company0Name, Corp = corp1 };
+            var com1 = new Company { Name = Inits.Company1Name, Corp = corp1 };
             context.Companies.AddRange(com0, com1);
             await context.SaveChangesAsync();
 
@@ -55,16 +57,7 @@ public static class CorporationSeedTestData
             context.Workstations.AddRange(workMasterC1, workC1W1, workC1P1, workC1P2, workC1W2, workC1L1, workC1O1);
             await context.SaveChangesAsync();
 
-            var pt1 = new ProductType { Name = "Кирпич полуторный 250x120x65", Number = 1, Units = 360, Volume = 1.1, Weight = 500.0, Price = 5000.0M };
-            var pt2 = new ProductType { Name = "Кирпич пустотелый 250x120x65", Number = 2, Units = 360, Volume = 1.1, Weight = 550.0, Price = 6000.0M };
-            var pt3 = new ProductType { Name = "Кирпич полнотелый 250x120x88", Number = 3, Units = 280, Volume = 1.2, Weight = 490.0, Price = 5500.0M };
-            var pt4 = new ProductType { Name = "Кирпич двойной 250x120x138", Number = 4, Units = 180, Volume = 1.3, Weight = 520.0, Price = 7000.0M };
-            var pt5 = new ProductType { Name = "Кирпич двойной пустотелый 250x120x138", Number = 5, Units = 180, Volume = 1.05, Weight = 530.0, Price = 6500.0M };
-            var pt6 = new ProductType { Name = "Кирпич евро пустотелый 250x120x120", Number = 6, Units = 260, Volume = 1.0, Weight = 540.0, Price = 6000.0M };
-            var pt7 = new ProductType { Name = "Кирпич евро 250x120x120", Number = 7, Units = 260, Volume = 1.15, Weight = 520.0, Price = 5000.0M };
-            var pt8 = new ProductType { Name = "Кирпич евро полнотелый 250x120x65", Number = 8, Units = 380, Volume = 1.2, Weight = 510.0, Price = 6500.0M };
-            context.ProductTypes.AddRange(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8);
-            await context.SaveChangesAsync();
+
 
             #region Identity
 
@@ -237,6 +230,76 @@ public static class CorporationSeedTestData
                 }
 
             }
+
+            #endregion
+
+            #region Factory 1
+
+            var pt1 = new ProductType { Name = "Кирпич полуторный 250x120x65", Number = 1, Units = 360, Volume = 1.1, Weight = 500.0, Price = 5000.0M };
+            var pt2 = new ProductType { Name = "Кирпич пустотелый 250x120x65", Number = 2, Units = 360, Volume = 1.1, Weight = 550.0, Price = 6000.0M };
+            var pt3 = new ProductType { Name = "Кирпич полнотелый 250x120x88", Number = 3, Units = 280, Volume = 1.2, Weight = 490.0, Price = 5500.0M };
+            var pt4 = new ProductType { Name = "Кирпич двойной 250x120x138", Number = 4, Units = 180, Volume = 1.3, Weight = 520.0, Price = 7000.0M };
+            var pt5 = new ProductType { Name = "Кирпич двойной пустотелый 250x120x138", Number = 5, Units = 180, Volume = 1.05, Weight = 530.0, Price = 6500.0M };
+            var pt6 = new ProductType { Name = "Кирпич евро пустотелый 250x120x120", Number = 6, Units = 260, Volume = 1.0, Weight = 540.0, Price = 6000.0M };
+            var pt7 = new ProductType { Name = "Кирпич евро 250x120x120", Number = 7, Units = 260, Volume = 1.15, Weight = 520.0, Price = 5000.0M };
+            var pt8 = new ProductType { Name = "Кирпич евро полнотелый 250x120x65", Number = 8, Units = 380, Volume = 1.2, Weight = 510.0, Price = 6500.0M };
+            context.ProductTypes.AddRange(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8);
+            await context.SaveChangesAsync();
+
+            var lr1 = new Com1LooseRaw { Name = "Песок", Price = 100.0M };
+            var lr2 = new Com1LooseRaw { Name = "Известь", Price = 1000.0M };
+            context.Com1LooseRaws.AddRange( lr1, lr2 );
+            await context.SaveChangesAsync();
+
+            var shA = new Com1Shift { Name = "Смена А" };
+            var shB = new Com1Shift { Name = "Смена Б" };
+            var shC = new Com1Shift { Name = "Смена В" };
+            var shD = new Com1Shift { Name = "Смена Г" };
+            context.Com1Shifts.AddRange(shA, shB, shC, shD);
+            await context.SaveChangesAsync();
+
+            var w1sd1 = new Com1Warehouse1ShiftData
+            {
+                Time = DateTime.Today.AddDays(-1).AddHours(-16),
+                Com1Shift = shB,
+                UserId = (await userManager.FindByNameAsync("loginov")).Id,
+                Com1Tank1LooseRaw = lr1,
+                Com1Tank1LooseRawValue = 220.0,
+                Com1Tank2LooseRaw = lr2,
+                Com1Tank2LooseRawValue = 320.0,
+            };
+            var w1sd2 = new Com1Warehouse1ShiftData
+            {
+                Time = DateTime.Today.AddDays(-1).AddHours(-4),
+                Com1Shift = shA,
+                UserId = (await userManager.FindByNameAsync("petrov")).Id,
+                Com1Tank1LooseRaw = lr1,
+                Com1Tank1LooseRawValue = 210.0,
+                Com1Tank2LooseRaw = lr2,
+                Com1Tank2LooseRawValue = 310.0,
+            };
+            var w1sd3 = new Com1Warehouse1ShiftData
+            {
+                Time = DateTime.Today.AddHours(-16), 
+                Com1Shift = shB,
+                UserId = (await userManager.FindByNameAsync("loginov")).Id,
+                Com1Tank1LooseRaw = lr1,
+                Com1Tank1LooseRawValue = 200.0, 
+                Com1Tank2LooseRaw = lr2, 
+                Com1Tank2LooseRawValue = 300.0,
+            };
+            var w1sd4 = new Com1Warehouse1ShiftData
+            {
+                Time = DateTime.Today.AddHours(-4),
+                Com1Shift = shA,
+                UserId = (await userManager.FindByNameAsync("petrov")).Id,
+                Com1Tank1LooseRaw = lr1,
+                Com1Tank1LooseRawValue = 190.0,
+                Com1Tank2LooseRaw = lr2,
+                Com1Tank2LooseRawValue = 350.0,
+            };
+            context.Com1Warehouse1ShiftDatas.AddRange( w1sd1, w1sd2, w1sd3, w1sd4 );
+            await context.SaveChangesAsync();
 
             #endregion
 

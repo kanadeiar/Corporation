@@ -2,6 +2,11 @@
 
 public static class Inits
 {
+    public static string CopropationName = "Корпорация";
+
+    public static string Company0Name = "Администрация";
+    public static string Company1Name = "Завод 1";
+
     public static string UserRole = "users";
 
     public static string MasterWorkC1P1 = "masterC1P1";
