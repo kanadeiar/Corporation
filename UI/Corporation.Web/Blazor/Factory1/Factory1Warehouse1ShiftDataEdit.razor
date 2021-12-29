@@ -40,12 +40,12 @@
                         </div>
                     }
                     <div>
-                        <label>Дата заливки</label>
+                        <label>Дата начала смены</label>
                         <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Time)" />
                         <InputDate class="form-control" @bind-Value="Com1Warehouse1ShiftData.Time" />
                     </div>
                     <div>
-                        <label>Время заливки</label>
+                        <label>Время начала смены</label>
                         <ValidationMessage For="@(() => Com1Warehouse1ShiftData.Time)" />
                         <input type="time" class="form-control" @bind="Com1Warehouse1ShiftData.Time" />
                     </div>
