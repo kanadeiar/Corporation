@@ -8,7 +8,7 @@ using Corporation.Domain.Identity;
 
 namespace Corporation.Domain.Company1
 {
-    /// <summary> Данные за одну смену </summary>
+    /// <summary> Данные за одну смену по складу сырья </summary>
     public class Com1Warehouse1ShiftData : Entity
     {
         /// <summary> Дата время смены </summary>

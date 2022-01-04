@@ -12,17 +12,61 @@
     <div class="col-md-7 col-lg-10">
         <div class="border-1 shadow rounded bg-light p-1">
 
-            <h1 class="my-2 p-2 bg-dark text-white">Завод 1</h1>
+            <h1 class="my-2 p-2 bg-dark text-white"><span class="fa fa-home" aria-hidden="true"></span> Завод 1</h1>
 
-            <p>Содержимое склада сырья:</p>
-            @if (Com1Warehouse1 is null)
-            {
-                <p>Данные отсутствуют</p>
-            }
-            else
-            {
-                <p>@Com1Warehouse1.Com1Tank1LooseRaw.Name : @Com1Warehouse1.Com1Tank1LooseRawValue м3, @Com1Warehouse1.Com1Tank2LooseRaw.Name : @Com1Warehouse1.Com1Tank2LooseRawValue м3</p>
-            }
+            <p class="mb-0 mt-2">Содержимое склада сырья:</p>
+            <p class="m-0">
+                @if (Com1Warehouse1ShiftData is null)
+                {
+                    <apsn>Данные отсутствуют</apsn>
+                }
+                else
+                {
+                    <span><strong>@Com1Warehouse1ShiftData.Com1Tank1LooseRaw.Name : @Com1Warehouse1ShiftData.Com1Tank1LooseRawValue м3, @Com1Warehouse1ShiftData.Com1Tank2LooseRaw.Name : @Com1Warehouse1ShiftData.Com1Tank2LooseRawValue м3</strong></span>
+                }
+            </p>
+            <h6 class="mt-4">Последние данные по производству:</h6>
+            <p class="m-0">
+                @if (Com1Press1ShiftData is null)
+                {
+                    <apsn> Данные по прессованию отсутствуют</apsn>
+                }
+                else
+                {
+                    <span> Напрессовано за смену: <strong>@Com1Press1ShiftData.Com1ProductType.Name - @Com1Press1ShiftData.Com1ProductTypeCount шт.</strong></span>
+                }
+            </p>
+            <p class="m-0">
+                @if (Com1Autoclaves1ShiftData is null)
+                {
+                    <span> Данные по автоклавированию отсутствуют</span>
+                }
+                else
+                {
+                    <span> Автоклавировано за смену: <strong>@Com1Autoclaves1ShiftData.Com1Autoclave.Name - @Com1Autoclaves1ShiftData.AutoclavedCount шт.</strong></span>
+                }
+            </p>
+            <p class="m-0">
+                @if (Com1Packing1ShiftData is null)
+                {
+                    <span> Данные по упаковке отсутствуют</span>
+                }
+                else
+                {
+                    <span> Упаковано за смену: <strong>@Com1Packing1ShiftData.Com1Pack.Name - @Com1Packing1ShiftData.Com1PackCount шт.</strong></span>
+                }
+            </p>
+            <p class="mt-4 mb-0">Содержимое склада продукции:</p>
+            <p class="m-0">
+                @if (Com1Warehouse2ShiftData is null)
+                {
+                    <apsn>Данные отсутствуют</apsn>
+                }
+                else
+                {
+                    <span><strong>@Com1Warehouse2ShiftData.Com1Pack.Name : @Com1Warehouse2ShiftData.Com1PackValue шт.</strong></span>
+                }
+            </p>
 
         </div>
     </div>
@@ -31,13 +75,29 @@
 
 @code {
     CorporationContext _Context => Service;
-    public Com1Warehouse1ShiftData? Com1Warehouse1 { get; set; }
+    public Com1Warehouse1ShiftData? Com1Warehouse1ShiftData { get; set; }
+    public Com1Press1ShiftData? Com1Press1ShiftData { get; set; }
+    public Com1Autoclaves1ShiftData? Com1Autoclaves1ShiftData { get; set; }
+    public Com1Packing1ShiftData? Com1Packing1ShiftData { get; set; }
+    public Com1Warehouse2ShiftData? Com1Warehouse2ShiftData { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Com1Warehouse1 = await _Context.Com1Warehouse1ShiftDatas
+        Com1Warehouse1ShiftData = await _Context.Com1Warehouse1ShiftDatas
             .Include(i => i.Com1Tank1LooseRaw)
             .Include(i => i.Com1Tank2LooseRaw)
+            .OrderByDescending(i => i.Time).FirstOrDefaultAsync();
+        Com1Press1ShiftData = await _Context.Com1Press1ShiftDatas
+            .Include(i => i.Com1ProductType)
+            .OrderByDescending(i => i.Time).FirstOrDefaultAsync();
+        Com1Autoclaves1ShiftData = await _Context.Com1Autoclaves1ShiftDatas
+            .Include(i => i.Com1Autoclave)
+            .OrderByDescending(i => i.Time).FirstOrDefaultAsync();
+        Com1Packing1ShiftData = await _Context.Com1Packing1ShiftDatas
+            .Include(i => i.Com1Pack)
+            .OrderByDescending(i => i.Time).FirstOrDefaultAsync();
+        Com1Warehouse2ShiftData = await _Context.Com1Warehouse2ShiftDatas
+            .Include(i => i.Com1Pack)
             .OrderByDescending(i => i.Time).FirstOrDefaultAsync();
     }
 }

@@ -15,29 +15,25 @@ namespace Corporation.Services
             _productTypeData = productTypeData;
         }
 
-        public async Task<IEnumerable<ProsuctInfoWebModel>> GetInfoForProducts()
+        public async Task<IEnumerable<ProductInfoWebModel>> GetInfoForProducts()
         {
             var infos = await _productTypeData.GetAllAsync(true);
-            var results = infos.Select(pt => new ProsuctInfoWebModel
+            var results = infos.Select(pt => new ProductInfoWebModel
             {
                 Id = pt.Id,
                 Name = pt.Name,
                 Number = pt.Number,
-                Volume = pt.Volume,
                 Units = pt.Units,
-                Weight = pt.Weight,
             }).ToList();
             return results.OrderBy(r => r.Name);
         }
     }
 
-    public class ProsuctInfoWebModel
+    public class ProductInfoWebModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public int Number { get; set; }
-        public double Volume { get; set; }
         public int Units { get; set; }
-        public double Weight { get; set; }
     }
 }

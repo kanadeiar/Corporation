@@ -1,0 +1,167 @@
+﻿@page "/factory1/autoclave1/edit/{id:int}"
+@page "/factory1/autoclave1/create"
+@inherits OwningComponentBase<CorporationContext>
+@inject NavigationManager NavManager
+
+<PageTitle>@Mode - Завод 1</PageTitle>
+
+<link href="/css/BlazorValidation.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-3 col-lg-2 mb-2">
+        <nav class="flex-column">
+            <_Factory1LeftSidebarPartial />
+        </nav>
+    </div>
+    <div class="col-md-7 col-lg-10 mb-2">
+        <div class="border-1 shadow rounded bg-light p-1">
+
+            <h1 class="my-2 p-2 bg-@Theme text-@TextColor">@Mode</h1>
+            <h3>Автоклавирование 1</h3>
+
+            <div>
+                <NavLink class="btn btn-secondary" href="factory1/autoclave1">Назад</NavLink>
+            </div>
+            
+            @if (Com1Autoclaves1ShiftData is null)
+            {
+                <div class="row">
+                    <div class="p-5 text-center">Загрузка ...</div>
+                </div>
+            }
+            else
+            {
+                <EditForm Model="Com1Autoclaves1ShiftData" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator/>
+                                        @if (!IsModeCreate)
+                    {
+                        <div>
+                            <label>ID</label>
+                            <InputNumber class="form-control" @bind-Value="Com1Autoclaves1ShiftData.Id" disabled />
+                        </div>
+                    }
+                    <div>
+                        <label>Дата начала смены</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.Time)" />
+                        <InputDate class="form-control" @bind-Value="Com1Autoclaves1ShiftData.Time" />
+                    </div>
+                    <div>
+                        <label>Время начала смены</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.Time)" />
+                        <input type="time" class="form-control" @bind="Com1Autoclaves1ShiftData.Time" />
+                    </div>
+                    <div>
+                        <label>Смена</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.Com1ShiftId)" />
+                        <InputSelect class="form-select" @bind-Value="Com1Autoclaves1ShiftData.Com1ShiftId">
+                            <option selected value="0" disabled="disabled">Выберите смену</option>
+                            @foreach (var item in Com1Shifts.Keys)
+                            {
+                                <option value="@item">@Com1Shifts[item]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label>Автоклавщик</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.UserId)" />
+                        <InputSelect class="form-select" @bind-Value="Com1Autoclaves1ShiftData.UserId">
+                            <option selected value="null" disabled="disabled">Выберите автоклавщика</option>
+                            @foreach (var item in Users.Keys)
+                            {
+                                <option value="@item">@Users[item]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label>Автоклав</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.Com1AutoclaveId)" />
+                        <InputSelect class="form-select" @bind-Value="Com1Autoclaves1ShiftData.Com1AutoclaveId">
+                            <option selected value="0" disabled="disabled">Выберите сырье в баке 1</option>
+                            @foreach (var item in Com1Autoclaves.Keys)
+                            {
+                                <option value="@item">@Com1Autoclaves[item]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label>Дата начала автоклавирования</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.TimeStart)" />
+                        <InputDate class="form-control" @bind-Value="Com1Autoclaves1ShiftData.TimeStart" />
+                        <label>Время начала автоклавирования</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.TimeStart)" />
+                        <input type="time" class="form-control" @bind="Com1Autoclaves1ShiftData.TimeStart" />
+                    </div>
+                    <div>
+                        <label>Время автоклавировния</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.AutoclavedTime)" />
+                        <InputText type="time" class="form-control" @bind-Value="AutoclavingTimeProxy" />
+                    </div>
+                    <div>
+                        <label>Количество пачек автоклавировано</label>
+                        <ValidationMessage For="@(() => Com1Autoclaves1ShiftData.AutoclavedCount)" />
+                        <InputNumber class="form-control" @bind-Value="Com1Autoclaves1ShiftData.AutoclavedCount" />
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-@Theme">Сохранить</button>
+                    </div>
+                </EditForm>
+            }    
+        </div>
+    </div>
+</div>
+
+@code {
+    CorporationContext _Context => Service;
+    [Parameter]
+    public int Id { get; set; }
+    public bool IsModeCreate => Id == 0;
+
+    public Com1Autoclaves1ShiftData? Com1Autoclaves1ShiftData { get; set; }
+    string AutoclavingTimeProxy
+    {
+        get => Com1Autoclaves1ShiftData?.AutoclavedTime.ToString() ?? string.Empty;
+        set
+        {
+            if (Com1Autoclaves1ShiftData is null) return;
+            TimeSpan.TryParse(value, out TimeSpan timeSpan);
+            Com1Autoclaves1ShiftData.AutoclavedTime = timeSpan;
+        }
+    }
+    public IDictionary<int, string> Com1Shifts { get; set; } = new Dictionary<int, string>();
+    public IDictionary<string, string> Users { get; set; } = new Dictionary<string, string>();
+    public IDictionary<int, string> Com1Autoclaves { get; set; } = new Dictionary<int, string>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsModeCreate)
+        {
+            Com1Autoclaves1ShiftData = new Com1Autoclaves1ShiftData();
+            if (DateTime.Now.Hour < 8)
+                Com1Autoclaves1ShiftData.Time = DateTime.Today.AddHours(-4);
+            else
+                Com1Autoclaves1ShiftData.Time = DateTime.Today.AddHours(8);
+        }
+        else
+            Com1Autoclaves1ShiftData = await _Context.Com1Autoclaves1ShiftDatas.FindAsync(Id);
+        Com1Shifts = await _Context.Com1Shifts.ToDictionaryAsync(s => s.Id, s => s.Name);
+        Users = await _Context.Users
+            .Where(u => u.Company.Name == Inits.Company1Name)
+            .ToDictionaryAsync(u => u.Id, u => $"{u.SurName} {u.FirstName} {u.Patronymic}");
+        Com1Autoclaves = await _Context.Com1Autoclaves.ToDictionaryAsync(a => a.Id, a => a.Name);
+
+    }
+
+    public async Task HandleValidSubmit()
+    {
+        if (IsModeCreate)
+        {
+            _Context.Add(Com1Autoclaves1ShiftData!);
+        }
+        await _Context.SaveChangesAsync();
+        NavManager.NavigateTo("factory1/autoclave1");
+    }
+
+    public string Mode => IsModeCreate ? "Добавление данных за смену" : "Редактирование данных за смену";
+    public string Theme => IsModeCreate ? "success" : "info";
+    public string TextColor => IsModeCreate ? "white" : "dark";
+}

@@ -10,7 +10,7 @@ public static class CorporationSeedTestData
         using (var context = new CorporationContext(serviceProvider.GetRequiredService<DbContextOptions<CorporationContext>>()))
         {
             var logger = serviceProvider.GetRequiredService<ILogger<CorporationContext>>();
-            if (context == null || context.ProductTypes == null)
+            if (context == null || context.Com1ProductTypes == null)
             {
                 logger.LogError("Null CorporationContext");
                 throw new ArgumentNullException("Null CorporationContext");
@@ -21,7 +21,7 @@ public static class CorporationSeedTestData
                 logger.LogInformation($"Applying migrations: {string.Join(",", pendingMigrations)}");
                 await context.Database.MigrateAsync();
             }
-            if (context.ProductTypes.Any())
+            if (context.Com1ProductTypes.Any())
             {
                 logger.LogInformation("Database contains data - database init with test data is not required");
                 return;
@@ -50,15 +50,14 @@ public static class CorporationSeedTestData
             var workMasterC1 = new Workstation { Name = "Рабочее место мастера 1", Department = depC1P1 };
             var workC1W1 = new Workstation { Name = "Управление складом сырья 1", Department = depC1W1 };
             var workC1P1 = new Workstation { Name = "Пресс кирпича 1", Department = depC1P1 };
+            var workC1A1 = new Workstation { Name = "Автоклавирование кирпича 1", Department = depC1P1 };
             var workC1P2 = new Workstation { Name = "Упаковка кирпича 1", Department = depC1P1 };
             var workC1W2 = new Workstation { Name = "Управление складом продукции 1", Department = depC1W2 };
             var workC1L1 = new Workstation { Name = "Рабочее место лаборанта 1", Department = depC1L1 };
             var workC1O1 = new Workstation { Name = "Рабочее место офисного рабоника 1", Department = depC1O1 };
-            context.Workstations.AddRange(workMasterC1, workC1W1, workC1P1, workC1P2, workC1W2, workC1L1, workC1O1);
+            context.Workstations.AddRange(workMasterC1, workC1W1, workC1P1, workC1A1, workC1P2, workC1W2, workC1L1, workC1O1);
             await context.SaveChangesAsync();
-
-
-
+            
             #region Identity
 
             UserManager<User> userManager = serviceProvider.GetRequiredService<UserManager<User>>();
@@ -78,6 +77,7 @@ public static class CorporationSeedTestData
                     await roleManager.CreateAsync(new Role { Name = Inits.MasterWorkC1P1, RoleName = "Мастера производства 1", DepartmentId = depC1P1.Id });
                     await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1W1, RoleName = "Кладовщики склада сырья 1", DepartmentId = depC1W1.Id });
                     await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1P1, RoleName = "Операторы кирпичного пресса 1", DepartmentId = depC1P1.Id });
+                    await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1A1, RoleName = "Автоклавщики автоклавов 1", DepartmentId = depC1P1.Id });
                     await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1P2, RoleName = "Операторы кирпичной упаковки 1", DepartmentId = depC1P1.Id });
                     await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1W2, RoleName = "Кладовщики склада продукции 1", DepartmentId = depC1W1.Id });
                     await roleManager.CreateAsync(new Role { Name = Inits.OperatorWorkC1L1, RoleName = "Лаборанты лаборатории 1", DepartmentId = depC1L1.Id });
@@ -168,6 +168,21 @@ public static class CorporationSeedTestData
                 {
                     await userManager.AddToRoleAsync(operatorC1P1, Inits.OperatorWorkC1P1);
                 }
+                var operatorC1A1 = new User
+                {
+                    SurName = "Агафонов",
+                    FirstName = "Агафон",
+                    Patronymic = "Агафонович",
+                    Birthday = DateTime.Today.AddYears(-24),
+                    UserName = "agafonov",
+                    Email = "agafonov@example.com",
+                    CompanyId = com1.Id,
+                };
+                result = await userManager.CreateAsync(operatorC1A1, "123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(operatorC1A1, Inits.OperatorWorkC1A1);
+                }
                 var operatorC1P2 = new User
                 {
                     SurName = "Васин",
@@ -196,7 +211,7 @@ public static class CorporationSeedTestData
                 result = await userManager.CreateAsync(operatorC1W2, "123");
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(operatorC1W2, Inits.OperatorWorkC1P1);
+                    await userManager.AddToRoleAsync(operatorC1W2, Inits.OperatorWorkC1W2);
                 }
                 var operatorC1L1 = new User
                 {
@@ -211,7 +226,7 @@ public static class CorporationSeedTestData
                 result = await userManager.CreateAsync(operatorC1L1, "123");
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(operatorC1L1, Inits.OperatorWorkC1P1);
+                    await userManager.AddToRoleAsync(operatorC1L1, Inits.OperatorWorkC1L1);
                 }
                 var operatorC1O1 = new User
                 {
@@ -226,7 +241,7 @@ public static class CorporationSeedTestData
                 result = await userManager.CreateAsync(operatorC1O1, "123");
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(operatorC1O1, Inits.OperatorWorkC1P1);
+                    await userManager.AddToRoleAsync(operatorC1O1, Inits.OperatorWorkC1O1);
                 }
 
             }
@@ -235,32 +250,28 @@ public static class CorporationSeedTestData
 
             #region Factory 1
 
-            var pt1 = new ProductType { Name = "Кирпич полуторный 250x120x65", Number = 1, Units = 360, Volume = 1.1, Weight = 500.0, Price = 5000.0M };
-            var pt2 = new ProductType { Name = "Кирпич пустотелый 250x120x65", Number = 2, Units = 360, Volume = 1.1, Weight = 550.0, Price = 6000.0M };
-            var pt3 = new ProductType { Name = "Кирпич полнотелый 250x120x88", Number = 3, Units = 280, Volume = 1.2, Weight = 490.0, Price = 5500.0M };
-            var pt4 = new ProductType { Name = "Кирпич двойной 250x120x138", Number = 4, Units = 180, Volume = 1.3, Weight = 520.0, Price = 7000.0M };
-            var pt5 = new ProductType { Name = "Кирпич двойной пустотелый 250x120x138", Number = 5, Units = 180, Volume = 1.05, Weight = 530.0, Price = 6500.0M };
-            var pt6 = new ProductType { Name = "Кирпич евро пустотелый 250x120x120", Number = 6, Units = 260, Volume = 1.0, Weight = 540.0, Price = 6000.0M };
-            var pt7 = new ProductType { Name = "Кирпич евро 250x120x120", Number = 7, Units = 260, Volume = 1.15, Weight = 520.0, Price = 5000.0M };
-            var pt8 = new ProductType { Name = "Кирпич евро полнотелый 250x120x65", Number = 8, Units = 380, Volume = 1.2, Weight = 510.0, Price = 6500.0M };
-            context.ProductTypes.AddRange(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8);
-            await context.SaveChangesAsync();
-
             var lr1 = new Com1LooseRaw { Name = "Песок", Price = 100.0M };
             var lr2 = new Com1LooseRaw { Name = "Известь", Price = 1000.0M };
-            context.Com1LooseRaws.AddRange( lr1, lr2 );
+            context.Com1LooseRaws.AddRange(lr1, lr2);
+            await context.SaveChangesAsync();
+
+            var pt1 = new Com1ProductType { Name = "Кирпич полуторный 250x120x65", Number = 1, Units = 360, Com1Loose1Raw = lr1, Com1Loose1RawValue = 100.0, Com1Loose2Raw = lr2, Com1Loose2RawValue = 120.0 };
+            var pt2 = new Com1ProductType { Name = "Кирпич двойной 250x120x138", Number = 2, Units = 240, Com1Loose1Raw = lr1, Com1Loose1RawValue = 140.0, Com1Loose2Raw = lr2, Com1Loose2RawValue = 160.0 };
+            var pt3 = new Com1ProductType { Name = "Кирпич евро пустотелый 250x120x120", Number = 3, Units = 180, Com1Loose1Raw = lr1, Com1Loose1RawValue = 180.0, Com1Loose2Raw = lr2, Com1Loose2RawValue = 170.0 };
+            var pt4 = new Com1ProductType { Name = "Кирпич полнотелый 250x120x88", Number = 4, Units = 300, Com1Loose1Raw = lr1, Com1Loose1RawValue = 120.0, Com1Loose2Raw = lr2, Com1Loose2RawValue = 130.0 };
+            context.Com1ProductTypes.AddRange( pt1, pt2, pt3, pt4 );
             await context.SaveChangesAsync();
 
             var shA = new Com1Shift { Name = "Смена А" };
             var shB = new Com1Shift { Name = "Смена Б" };
             var shC = new Com1Shift { Name = "Смена В" };
             var shD = new Com1Shift { Name = "Смена Г" };
-            context.Com1Shifts.AddRange(shA, shB, shC, shD);
+            context.Com1Shifts.AddRange( shA, shB, shC, shD );
             await context.SaveChangesAsync();
 
             var w1sd1 = new Com1Warehouse1ShiftData
             {
-                Time = DateTime.Today.AddDays(-1).AddHours(-16),
+                Time = DateTime.Today.AddHours(-16),
                 Com1Shift = shB,
                 UserId = (await userManager.FindByNameAsync("loginov")).Id,
                 Com1Tank1LooseRaw = lr1,
@@ -270,7 +281,7 @@ public static class CorporationSeedTestData
             };
             var w1sd2 = new Com1Warehouse1ShiftData
             {
-                Time = DateTime.Today.AddDays(-1).AddHours(-4),
+                Time = DateTime.Today.AddHours(-4),
                 Com1Shift = shA,
                 UserId = (await userManager.FindByNameAsync("petrov")).Id,
                 Com1Tank1LooseRaw = lr1,
@@ -278,27 +289,113 @@ public static class CorporationSeedTestData
                 Com1Tank2LooseRaw = lr2,
                 Com1Tank2LooseRawValue = 310.0,
             };
-            var w1sd3 = new Com1Warehouse1ShiftData
+            context.Com1Warehouse1ShiftDatas.AddRange( w1sd1, w1sd2 );
+            await context.SaveChangesAsync();
+
+            var p1sd1 = new Com1Press1ShiftData
             {
-                Time = DateTime.Today.AddHours(-16), 
+                Time = DateTime.Today.AddHours(-16),
                 Com1Shift = shB,
-                UserId = (await userManager.FindByNameAsync("loginov")).Id,
-                Com1Tank1LooseRaw = lr1,
-                Com1Tank1LooseRawValue = 200.0, 
-                Com1Tank2LooseRaw = lr2, 
-                Com1Tank2LooseRawValue = 300.0,
+                UserId = (await userManager.FindByNameAsync("petrov")).Id,
+                Com1ProductType = pt1,
+                Com1ProductTypeCount = 10,
+                Com1Loose1RawValue = 20.0,
+                Com1Loose2RawValue = 25.0,
             };
-            var w1sd4 = new Com1Warehouse1ShiftData
+            var p1sd2 = new Com1Press1ShiftData
             {
                 Time = DateTime.Today.AddHours(-4),
                 Com1Shift = shA,
-                UserId = (await userManager.FindByNameAsync("petrov")).Id,
-                Com1Tank1LooseRaw = lr1,
-                Com1Tank1LooseRawValue = 190.0,
-                Com1Tank2LooseRaw = lr2,
-                Com1Tank2LooseRawValue = 350.0,
+                UserId = (await userManager.FindByNameAsync("loginov")).Id,
+                Com1ProductType = pt1,
+                Com1ProductTypeCount = 11,
+                Com1Loose1RawValue = 22.0,
+                Com1Loose2RawValue = 27.0,
             };
-            context.Com1Warehouse1ShiftDatas.AddRange( w1sd1, w1sd2, w1sd3, w1sd4 );
+            context.Com1Press1ShiftDatas.AddRange( p1sd1, p1sd2 );
+            await context.SaveChangesAsync();
+
+            var aut1 = new Com1Autoclave
+            {
+                Name = "Автоклав № 1",
+            };
+            var aut2 = new Com1Autoclave
+            {
+                Name = "Автоклав № 2",
+            };
+            context.Com1Autoclaves.AddRange(aut1, aut2);
+            await context.SaveChangesAsync();
+
+            var a1sd1 = new Com1Autoclaves1ShiftData
+            {
+                Time = DateTime.Today.AddHours(-16),
+                Com1Shift = shB,
+                UserId = (await userManager.FindByNameAsync("agafonov")).Id,
+                Com1Autoclave = aut1,
+                TimeStart = DateTime.Today.AddHours(-20),
+                AutoclavedTime = new TimeSpan(8,10,0),
+                AutoclavedCount = 10,
+            };
+            var a1sd2 = new Com1Autoclaves1ShiftData
+            {
+                Time = DateTime.Today.AddHours(-4),
+                Com1Shift = shA,
+                UserId = (await userManager.FindByNameAsync("vasin")).Id,
+                Com1Autoclave = aut2,
+                TimeStart = DateTime.Today.AddHours(-8),
+                AutoclavedTime = new TimeSpan(8, 30, 0),
+                AutoclavedCount = 11,
+            };
+            context.Com1Autoclaves1ShiftDatas.AddRange(a1sd1, a1sd2);
+            await context.SaveChangesAsync();
+
+            var pac1 = new Com1Pack
+            {
+                Name = "Стандарт",
+            };
+            var pac2 = new Com1Pack
+            {
+                Name = "Эконом",
+            };
+            context.Com1Packs.AddRange(pac1, pac2);
+            await context.SaveChangesAsync();
+
+            var pc1sd1 = new Com1Packing1ShiftData
+            {
+                Time = DateTime.Today.AddHours(-16),
+                Com1Shift = shB,
+                UserId = (await userManager.FindByNameAsync("vasin")).Id,
+                Com1Pack = pac1,
+                Com1PackCount = 20,
+            };
+            var pc1sd2 = new Com1Packing1ShiftData
+            {
+                Time = DateTime.Today.AddHours(-4),
+                Com1Shift = shA,
+                UserId = (await userManager.FindByNameAsync("agafonov")).Id,
+                Com1Pack = pac2,
+                Com1PackCount = 22,
+            };
+            context.Com1Packing1ShiftDatas.AddRange(pc1sd1, pc1sd2);
+            await context.SaveChangesAsync();
+
+            var w2sd1 = new Com1Warehouse2ShiftData
+            {
+                Time = DateTime.Today.AddHours(-16),
+                Com1Shift = shB,
+                UserId = (await userManager.FindByNameAsync("sidorov")).Id,
+                Com1Pack = pac1,
+                Com1PackValue = 20,
+            };
+            var w2sd2 = new Com1Warehouse2ShiftData
+            {
+                Time = DateTime.Today.AddHours(-4),
+                Com1Shift = shA,
+                UserId = (await userManager.FindByNameAsync("sidorov")).Id,
+                Com1Pack = pac2,
+                Com1PackValue = 22,
+            };
+            context.Com1Warehouse2ShiftDatas.AddRange(w2sd1, w2sd2);
             await context.SaveChangesAsync();
 
             #endregion
