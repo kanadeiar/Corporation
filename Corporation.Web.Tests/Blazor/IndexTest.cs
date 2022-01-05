@@ -24,12 +24,12 @@ namespace Corporation.Web.Tests.Blazor
         public void Index_InitCorrect_ShouldCorrect()
         {
             var expectedUser = new User { Id = "123", SurName = "Testov", FirstName = "Test", Patronymic = "Testovich" };
-            using var ctx = new Bunit.TestContext();
-            ctx.Services.AddDbContext<CorporationContext>(options =>
+            using var context = new Bunit.TestContext();
+            context.Services.AddDbContext<CorporationContext>(options =>
             {
                 options.UseInMemoryDatabase(nameof(Index_InitCorrect_ShouldCorrect));
             });
-            var testContext1 = ctx
+            var testContext1 = context
                 .Services.CreateScope().ServiceProvider.GetService<CorporationContext>();
             testContext1!.Com1Warehouse1ShiftDatas.Add(
                 new Com1Warehouse1ShiftData
@@ -43,7 +43,8 @@ namespace Corporation.Web.Tests.Blazor
                     Com1Tank2LooseRawValue = 320.0,
                 });
             testContext1!.SaveChangesAsync().Wait();
-            var index = ctx.RenderComponent<Web.Blazor.Index>();
+
+            var index = context.RenderComponent<Web.Blazor.Index>();
 
             Assert.IsTrue( index.Markup.Contains("<h6>Завод 1</h6>"));
             Assert.AreEqual( expectedUser.Id, index.Instance.Com1Warehouse1ShiftData.UserId );
