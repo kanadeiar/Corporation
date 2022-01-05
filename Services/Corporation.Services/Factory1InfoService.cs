@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Corporation.Services
 {
-    public class Factory1InfoService
+    public class Factory1InfoService : IFactory1InfoService
     {
         private readonly CorporationContext _Context;
         public Factory1InfoService(CorporationContext context)

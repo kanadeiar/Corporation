@@ -15,8 +15,8 @@ builder.Host.ConfigureServices(services =>
 
     services.AddScoped<IProductTypeData, DatabaseCom1ProductTypeData>();
 
-    services.AddScoped<ProductsInfoService>();
-    services.AddScoped<Factory1InfoService>();
+    services.AddScoped<IProductsInfoService, ProductsInfoService>();
+    services.AddScoped<IFactory1InfoService, Factory1InfoService>();
 
     services.AddControllersWithViews().AddRazorRuntimeCompilation();
     services.AddRazorPages().AddRazorRuntimeCompilation();

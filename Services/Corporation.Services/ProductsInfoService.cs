@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Corporation.Services
 {
-    public class ProductsInfoService
+    public class ProductsInfoService : IProductsInfoService
     {
         private readonly IProductTypeData _productTypeData;
         public ProductsInfoService(IProductTypeData productTypeData)
