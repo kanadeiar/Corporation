@@ -12,7 +12,12 @@
             <h1>@ViewBag.Title</h1>
             <div class="table-responsive border-1 shadow rounded bg-light p-2">
                 <div class="my-2">
-                    <a asp-controller="User" asp-action="Create" class="btn btn-success">Создать нового пользователя</a>
+                    @if (User.IsInRole("admins") || User.IsInRole("masterC1P1"))
+                    {
+                        <a asp-controller="User" asp-action="Create" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Создать нового пользователя системы">
+                            Создать
+                        </a>
+                    }
                 </div>
                 <table class="table my-2 table-bordered table-striped">
                     <thead>
@@ -23,7 +28,7 @@
                         <th>Логин</th>
                         <th>Почта</th>
                         <th>Возраст</th>
-                        <th>Отдел</th>
+                        <th>Компания</th>
                         <th>Роли</th>
                         <th></th>
                     </tr>
@@ -46,13 +51,28 @@
                                 <td>@user.UserName</td>
                                 <td>@user.Email</td>
                                 <td>@user.Age</td>
-                                <td>@user.Department</td>
-                                <td>@user.RolesNames</td>
+                                <td>@user.CompanyName</td>
+                                <td>
+                                    @if (!user.RolesNames.Any())
+                                    {
+                                        <span>Отсутствуют</span>
+                                    }
+                                    else
+                                    {
+                                        foreach (var r in user.RolesNames)
+                                        {
+                                            <span>@r </span>
+                                        }
+                                    }
+                                </td>
                                 <td class="text-center">
-                                    <a asp-controller="User" asp-action="Edit" asp-route-id="@user.Id"
-                                       class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Редактировать</a>
-                                    <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id"
-                                       class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                                    @if (User.IsInRole("admins") || User.IsInRole("masterC1P1"))
+                                    {
+                                        <a asp-controller="User" asp-action="Edit" asp-route-id="@user.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Редактировать пользователя"
+                                           class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+                                        <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Удалить пользователя"
+                                           class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                                    }
                                 </td>
                             </tr>
                         }

@@ -1,6 +1,7 @@
 ﻿using Corporation.Domain.Entites;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Corporation.Domain.Company1;
 
 namespace Corporation.Interfaces.Services
 {
@@ -8,13 +9,13 @@ namespace Corporation.Interfaces.Services
     public interface IProductTypeData
     {
         /// <summary> Получить все </summary>
-        Task<IEnumerable<ProductType>> GetAllAsync(bool includes = false, bool trashed = false);
+        Task<IEnumerable<Com1ProductType>> GetAllAsync(bool includes = false, bool trashed = false);
         /// <summary> Данные одного </summary>
-        Task<ProductType> GetAsync(int id);
+        Task<Com1ProductType> GetAsync(int id);
         /// <summary> Добавить </summary>
-        Task<int> AddAsync(ProductType productType);
+        Task<int> AddAsync(Com1ProductType productType);
         /// <summary> Обновить </summary>
-        Task UpdateAsync(ProductType productType);
+        Task UpdateAsync(Com1ProductType productType);
         /// <summary> Удалить </summary>
         Task<bool> DeleteAsync(int id);
         /// <summary> Пометка удаления </summary>

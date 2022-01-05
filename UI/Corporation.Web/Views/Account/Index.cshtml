@@ -53,8 +53,8 @@
                                 <td class="text-break">@Model.User.Birthday.ToShortDateString()</td>
                             </tr>
                             <tr>
-                                <th>Отдел пользователя:</th>
-                                <td class="text-break">@Model.User.Department</td>
+                                <th>Компания пользователя:</th>
+                                <td class="text-break">@Model.User.Company?.Name</td>
                             </tr>
                             <tr>
                                 <th>Роли пользователя:</th>

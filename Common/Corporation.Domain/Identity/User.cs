@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Corporation.Domain.Entites.Structures;
 
 namespace Corporation.Domain.Identity
 {
@@ -24,8 +26,12 @@ namespace Corporation.Domain.Identity
         [Required(ErrorMessage = "Дата рождения обязательна для ввода")]
         public DateTime Birthday { get; set; } = DateTime.Today.AddYears(- 18);
 
+        /// <summary> Компания пользователя </summary>
         [Required(ErrorMessage = "Название отдела пользователя обязательно")]
-        [StringLength(200, MinimumLength = 3, ErrorMessage = "Название отдела пользователя должно быть длинной от 3 до 200 символов")]
-        public string Department { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Должна быть выбрана компания")]
+        public int CompanyId { get; set; }
+        /// <summary> Компания пользователя </summary>
+        [ForeignKey(nameof(CompanyId))]
+        public Company Company { get; set; }
     }
 }

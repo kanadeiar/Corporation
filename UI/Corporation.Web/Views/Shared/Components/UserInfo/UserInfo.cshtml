@@ -1,11 +1,11 @@
 ﻿<div class="pull-right d-grid gap-1 d-md-inline-block">
-    <a class="btn btn-dark" href="/online">
+    <a class="btn btn-dark" href="/online" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Онлайн управление производством">
         <i class="fas fa-mouse-pointer"></i> Онлайн
     </a>
-    <a asp-controller="Account" asp-action="Index" class="btn btn-primary">
+    <a asp-controller="Account" asp-action="Index" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Раздел управления профилем пользователя системы">
         <i class="fa fa-user"></i> @User.Identity?.Name
     </a>
-    <a asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary">
+    <a asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Выход из авторизации пользователя из системы">
         <i class="fa fa-unlock"></i> Выход
     </a>
 </div>

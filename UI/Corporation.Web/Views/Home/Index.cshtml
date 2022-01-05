@@ -14,7 +14,19 @@
             <h1 class="text-center">@ViewBag.Title</h1>
             
             <div class="border-1 shadow rounded bg-light p-1">
-                <p>Содержимое главной страницы</p>
+                <p>Общая информация по корпорации:</p>
+                
+                <h6>Завод 1</h6>
+                
+                @if (ViewBag.Factory1Warehouse2 is null)
+                {
+                    <p>Данные по складу продукции отсутствуют</p>
+                }
+                else
+                {
+                    <p>Склад продукции: <strong>Упаковки кирпичей "@ViewBag.Factory1Warehouse2.PackName" - @ViewBag.Factory1Warehouse2.Value шт.</strong></p>
+                }
+
             </div>
 
 

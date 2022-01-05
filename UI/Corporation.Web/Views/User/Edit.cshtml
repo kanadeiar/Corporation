@@ -47,10 +47,10 @@
                         <span asp-validation-for="Birthday" class="text-danger"></span>
                     </div>
                     
-                    <div class="my-2">
-                        <label asp-for="Department" class="form-label"></label>
-                        <input asp-for="Department" class="form-control" placeholder="Отдел пользователя" />
-                        <span asp-validation-for="Department" class="text-danger"></span>
+                    <div>
+                        <label asp-for="CompanyId" class="form-label"></label>
+                        <select asp-for="CompanyId" asp-items="ViewBag.Companies" class="form-control"></select>
+                        <span asp-validation-for="CompanyId" class="text-danger"></span>
                     </div>
                     
                     <div class="my-2">
@@ -70,6 +70,14 @@
                                         <i class="fa fa-times" aria-hidden="true"></i>
                                     </a>
                                 }
+                                <div>
+                                    <span>Описания: (</span>
+                                        @foreach (var name in Model.MemberNamesRoles)
+                                        {
+                                            <span>@name</span>
+                                        }
+                                    <span>)</span>
+                                </div>
                             </div>
                         }
                         <label asp-for="NonMembersRoles" class="form-label mb-0"></label>
@@ -87,6 +95,14 @@
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                     </a>
                                 }
+                                <div>
+                                    <span>Описания: (</span>
+                                    @foreach (var name in Model.NonMemberNamesRoles)
+                                    {
+                                        <span>@name</span>
+                                    }
+                                    <span>)</span>
+                                </div>
                             </div>
                         }
                     </div>
@@ -104,7 +120,9 @@
                     </div>
 
                     <div class="my-2">
-                        <button asp-action="Edit" class="btn btn-primary">Сохранить</button>
+                        <button asp-action="Edit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Сохранить изменения в данных пользователя">
+                            Сохранить
+                        </button>
                         <a asp-controller="User" asp-action="Index" class="btn btn-secondary">Назад</a>
                     </div>
                 </form>

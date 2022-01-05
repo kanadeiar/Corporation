@@ -2,12 +2,13 @@ namespace Corporation.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    public async Task<IActionResult> Index([FromServices] IFactory1InfoService factory1InfoService)
     {
+        ViewBag.Factory1Warehouse2 = await factory1InfoService.GetInfoFactory1Warehouse2();
         return View();
     }
 
-    public async Task<IActionResult> Products([FromServices] ProductsInfoService productsInfoService)
+    public async Task<IActionResult> Products([FromServices] IProductsInfoService productsInfoService)
     {
         ViewBag.ProductInfos = await productsInfoService.GetInfoForProducts();
         return View();

@@ -1,0 +1,97 @@
+﻿@page "/factory1/warehouse1"
+@inherits OwningComponentBase<CorporationContext>
+
+<PageTitle>Склад сырья 1 - Завод 1</PageTitle>
+
+<div class="row">
+    <div class="col-md-3 col-lg-2 mb-2">
+        <nav class="flex-column">
+            <_Factory1LeftSidebarPartial />
+        </nav>
+    </div>
+    <div class="col-md-7 col-lg-10 mb-2">
+        <div class="border-1 shadow rounded bg-light p-1">
+            <h1 class="my-2 p-2 bg-dark text-white">
+                <span class="fa fa-store" aria-hidden="true"></span> Склад сырья 1
+            </h1>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Дата время начала смены</th>
+                            <th>Смена</th>
+                            <th>Кладовщик</th>
+                            <th>Сырье в баке 1</th>
+                            <th>Объем</th>
+                            <th>Сырье в баке 2</th>
+                            <th>Объем</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @if (Com1Warehouse1ShiftDatas is null)
+                    {
+                        <tr><th colspan="9" class="p-4 text-center">Загрузка ...</th></tr>
+                    }
+                    else if (!Com1Warehouse1ShiftDatas.Any())
+                    {
+                        <tr><th colspan="9" class="p-4 text-center">Данные отсутствуют</th></tr>
+                    }
+                    else
+                    {
+                        foreach (var e in Com1Warehouse1ShiftDatas)
+                        {
+                            <tr>
+                                <td>@e.Id</td>
+                                <td>@e.Time.ToString("D") @e.Time.ToString("t")</td>
+                                <td>@e.Com1Shift?.Name</td>
+                                <td>@e.User?.SurName @e.User?.FirstName[0]. @e.User?.Patronymic[0].</td>
+                                <td>@e.Com1Tank1LooseRaw?.Name</td>
+                                <td>@e.Com1Tank1LooseRawValue м3</td>
+                                <td>@e.Com1Tank2LooseRaw?.Name</td>
+                                <td>@e.Com1Tank2LooseRawValue м3</td>
+                                <td class="text-center">
+                                    <NavLink class="btn btn-sm btn-info mb-1" href="@($"factory1/warehouse1/edit/{e.Id}")">
+                                        <i class="fas fa-edit"></i>
+                                    </NavLink>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="my-1">
+                <NavLink class="btn btn-success mb-1" href="factory1/warehouse1/create">
+                    <i class="fas fa-plus"></i>
+                    Добавить данные за смену
+                </NavLink>
+                <button class="btn btn-info mb-1" @onclick="UpdateDataAsync">Обновить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    CorporationContext _Context => Service;
+
+    private IQueryable<Com1Warehouse1ShiftData> _Query => _Context.Com1Warehouse1ShiftDatas
+        .Include(q => q.User)
+        .Include(q => q.Com1Shift)
+        .Include(q => q.Com1Tank1LooseRaw)
+        .Include(q => q.Com1Tank2LooseRaw);
+    public IEnumerable<Com1Warehouse1ShiftData>? Com1Warehouse1ShiftDatas { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await UpdateDataAsync();
+    }
+    private async Task UpdateDataAsync()
+    {
+        Com1Warehouse1ShiftDatas = await _Query.ToArrayAsync();
+    }
+
+}

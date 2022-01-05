@@ -20,14 +20,27 @@
                             Онлайн
                         </NavLink>
                     </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="factory1">
+                            Завод 1
+                        </NavLink>
+                    </li>
                 </ul>
                 <div class="pull-right d-grid gap-1 d-md-inline-block">
                     <AuthorizeView>
-                        <a href="/account" class="btn btn-primary me-1">
-                            <i class="fa fa-user"></i> @context.User.Identity.Name
-                        </a>
+                        <Tooltip Text="Раздел управления профилем пользователя системы">
+                            <a href="/account" class="btn btn-primary me-1">
+                                <i class="fa fa-user"></i> 
+                                @context.User.Identity.Name
+                            </a>
+                        </Tooltip>
                     </AuthorizeView>
-                    <a class="btn btn-secondary me-1" href="/">Назад</a>
+                    <Tooltip Text="Возвращение обратно">
+                        <a class="btn btn-secondary me-1" href="/">
+                            <i class="fa fa-arrow-left"></i>
+                            Назад
+                        </a>
+                    </Tooltip>
                 </div>
             </div>
         </div>

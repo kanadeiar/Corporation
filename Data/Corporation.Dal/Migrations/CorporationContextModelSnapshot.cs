@@ -17,7 +17,72 @@ namespace Corporation.Dal.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
-            modelBuilder.Entity("Corporation.Domain.Entites.ProductType", b =>
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Autoclave", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Com1Autoclaves");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Autoclaves1ShiftData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AutoclavedCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<TimeSpan>("AutoclavedTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Com1AutoclaveId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1ShiftId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("TimeStart")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Com1AutoclaveId");
+
+                    b.HasIndex("Com1ShiftId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Com1Autoclaves1ShiftDatas");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1LooseRaw", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,11 +96,150 @@ namespace Corporation.Dal.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Com1LooseRaws");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Pack", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Com1Packs");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Packing1ShiftData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1PackCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1PackId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1ShiftId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Com1PackId");
+
+                    b.HasIndex("Com1ShiftId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Com1Packing1ShiftDatas");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Press1ShiftData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Com1Loose1RawValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Com1Loose2RawValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("Com1ProductTypeCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1ProductTypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1ShiftId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Com1ProductTypeId");
+
+                    b.HasIndex("Com1ShiftId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Com1Press1ShiftDatas");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1ProductType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1Loose1RawId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Com1Loose1RawValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("Com1Loose2RawId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Com1Loose2RawValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
 
                     b.Property<byte[]>("Timestamp")
                         .IsConcurrencyToken()
@@ -45,15 +249,232 @@ namespace Corporation.Dal.Migrations
                     b.Property<int>("Units")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Volume")
-                        .HasColumnType("REAL");
+                    b.HasKey("Id");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("REAL");
+                    b.HasIndex("Com1Loose1RawId");
+
+                    b.HasIndex("Com1Loose2RawId");
+
+                    b.ToTable("Com1ProductTypes");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Shift", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductTypes");
+                    b.ToTable("Com1Shifts");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Warehouse1ShiftData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1ShiftId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1Tank1LooseRawId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Com1Tank1LooseRawValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("Com1Tank2LooseRawId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Com1Tank2LooseRawValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Com1ShiftId");
+
+                    b.HasIndex("Com1Tank1LooseRawId");
+
+                    b.HasIndex("Com1Tank2LooseRawId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Com1Warehouse1ShiftDatas");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Warehouse2ShiftData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1PackId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1PackValue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Com1ShiftId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Com1PackId");
+
+                    b.HasIndex("Com1ShiftId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Com1Warehouse2ShiftDatas");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CorpId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CorpId");
+
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Corp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Corps");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Workstation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("Workstations");
                 });
 
             modelBuilder.Entity("Corporation.Domain.Identity.Role", b =>
@@ -64,6 +485,9 @@ namespace Corporation.Dal.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -79,6 +503,8 @@ namespace Corporation.Dal.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -98,13 +524,11 @@ namespace Corporation.Dal.Migrations
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Department")
-                        .IsRequired()
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -163,6 +587,8 @@ namespace Corporation.Dal.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -276,6 +702,223 @@ namespace Corporation.Dal.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Autoclaves1ShiftData", b =>
+                {
+                    b.HasOne("Corporation.Domain.Company1.Com1Autoclave", "Com1Autoclave")
+                        .WithMany()
+                        .HasForeignKey("Com1AutoclaveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Company1.Com1Shift", "Com1Shift")
+                        .WithMany()
+                        .HasForeignKey("Com1ShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Com1Autoclave");
+
+                    b.Navigation("Com1Shift");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Packing1ShiftData", b =>
+                {
+                    b.HasOne("Corporation.Domain.Company1.Com1Pack", "Com1Pack")
+                        .WithMany()
+                        .HasForeignKey("Com1PackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Company1.Com1Shift", "Com1Shift")
+                        .WithMany()
+                        .HasForeignKey("Com1ShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Com1Pack");
+
+                    b.Navigation("Com1Shift");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Press1ShiftData", b =>
+                {
+                    b.HasOne("Corporation.Domain.Company1.Com1ProductType", "Com1ProductType")
+                        .WithMany()
+                        .HasForeignKey("Com1ProductTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Company1.Com1Shift", "Com1Shift")
+                        .WithMany()
+                        .HasForeignKey("Com1ShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Com1ProductType");
+
+                    b.Navigation("Com1Shift");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1ProductType", b =>
+                {
+                    b.HasOne("Corporation.Domain.Company1.Com1LooseRaw", "Com1Loose1Raw")
+                        .WithMany()
+                        .HasForeignKey("Com1Loose1RawId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Company1.Com1LooseRaw", "Com1Loose2Raw")
+                        .WithMany()
+                        .HasForeignKey("Com1Loose2RawId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Com1Loose1Raw");
+
+                    b.Navigation("Com1Loose2Raw");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Warehouse1ShiftData", b =>
+                {
+                    b.HasOne("Corporation.Domain.Company1.Com1Shift", "Com1Shift")
+                        .WithMany()
+                        .HasForeignKey("Com1ShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Company1.Com1LooseRaw", "Com1Tank1LooseRaw")
+                        .WithMany()
+                        .HasForeignKey("Com1Tank1LooseRawId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Company1.Com1LooseRaw", "Com1Tank2LooseRaw")
+                        .WithMany()
+                        .HasForeignKey("Com1Tank2LooseRawId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Com1Shift");
+
+                    b.Navigation("Com1Tank1LooseRaw");
+
+                    b.Navigation("Com1Tank2LooseRaw");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Company1.Com1Warehouse2ShiftData", b =>
+                {
+                    b.HasOne("Corporation.Domain.Company1.Com1Pack", "Com1Pack")
+                        .WithMany()
+                        .HasForeignKey("Com1PackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Company1.Com1Shift", "Com1Shift")
+                        .WithMany()
+                        .HasForeignKey("Com1ShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Corporation.Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Com1Pack");
+
+                    b.Navigation("Com1Shift");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Company", b =>
+                {
+                    b.HasOne("Corporation.Domain.Entites.Structures.Corp", "Corp")
+                        .WithMany("CompaniesDatas")
+                        .HasForeignKey("CorpId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Corp");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Department", b =>
+                {
+                    b.HasOne("Corporation.Domain.Entites.Structures.Company", "Company")
+                        .WithMany("DepartamentsDatas")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Workstation", b =>
+                {
+                    b.HasOne("Corporation.Domain.Entites.Structures.Department", "Department")
+                        .WithMany("WorkstationDatas")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Identity.Role", b =>
+                {
+                    b.HasOne("Corporation.Domain.Entites.Structures.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Identity.User", b =>
+                {
+                    b.HasOne("Corporation.Domain.Entites.Structures.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Corporation.Domain.Identity.Role", null)
@@ -325,6 +968,21 @@ namespace Corporation.Dal.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Company", b =>
+                {
+                    b.Navigation("DepartamentsDatas");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Corp", b =>
+                {
+                    b.Navigation("CompaniesDatas");
+                });
+
+            modelBuilder.Entity("Corporation.Domain.Entites.Structures.Department", b =>
+                {
+                    b.Navigation("WorkstationDatas");
                 });
 #pragma warning restore 612, 618
         }

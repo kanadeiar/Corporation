@@ -13,9 +13,10 @@ builder.Host.ConfigureServices(services =>
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
-    services.AddScoped<IProductTypeData, DatabaseProductTypeData>();
+    services.AddScoped<IProductTypeData, DatabaseCom1ProductTypeData>();
 
-    services.AddScoped<ProductsInfoService>();
+    services.AddScoped<IProductsInfoService, ProductsInfoService>();
+    services.AddScoped<IFactory1InfoService, Factory1InfoService>();
 
     services.AddControllersWithViews().AddRazorRuntimeCompilation();
     services.AddRazorPages().AddRazorRuntimeCompilation();

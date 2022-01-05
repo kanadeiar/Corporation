@@ -61,16 +61,26 @@
                         @Html.DisplayFor(model => model.Age)
                     </dd>
                     <dt class="col-sm-4">
-                        @Html.DisplayNameFor(model => model.Department)
+                        @Html.DisplayNameFor(model => model.CompanyName)
                     </dt>
                     <dd class="col-sm-8">
-                        @Html.DisplayFor(model => model.Department)
+                        @Html.DisplayFor(model => model.CompanyName)
                     </dd>
                     <dt class="col-sm-4">
                         @Html.DisplayNameFor(model => model.RolesNames)
                     </dt>
                     <dd class="col-sm-8">
-                        @Html.DisplayFor(model => model.RolesNames)
+                        @if (!Model.RolesNames.Any())
+                        {
+                            <span>Отсутствуют</span>
+                        }
+                        else
+                        {
+                            foreach (var r in Model.RolesNames)
+                            {
+                                <span>@r </span>
+                            }
+                        }
                     </dd>
                 </dl>
 
@@ -82,7 +92,7 @@
                         </div>
                     }
                     <form asp-controller="User" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
-                        <input type="submit" value="Подтвердить удаление пользователя" class="btn btn-danger @((Model.UserName == "admin") ? "disabled" : "")"/>
+                        <input type="submit" value="Подтвердить удаление пользователя" class="btn btn-danger @((Model.UserName == "admin") ? "disabled" : "")" data-bs-toggle="tooltip" data-bs-placement="top" title="Удалить насовсем пользователя из системы"/>
                         <a asp-controller="User" asp-action="Index" class="btn btn-secondary">Назад</a>
                     </form>
                 </div>

@@ -7,7 +7,7 @@ public class ProductsModel : PageModel
     {
         _productsInfoService = productsInfoService;
     }
-    public IEnumerable<ProsuctInfoWebModel> ProductInfos { get; set; }
+    public IEnumerable<ProductInfoWebModel> ProductInfos { get; set; }
     public async Task OnGetAsync()
     {
         ProductInfos = await _productsInfoService.GetInfoForProducts();
